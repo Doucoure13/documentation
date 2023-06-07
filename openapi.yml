@@ -1,12 +1,13 @@
 openapi: 3.0.3
 info:
-  title: API SPI
+  title: DOCUMENTATION API SPI
   description: |-
-    API du Système de Paiement Instantané (PI-SPI) de la BCEAO.
+    Documentation de l'API du Système de Paiement Instantané (PI-SPI) de la BCEAO.
 
     PI-SPI gère les opérations de virement, de paiement, de règlement et de gestion des comptes des participants
 
     # Généralités
+    
 
     ## Gestion des versions 
 
@@ -14,7 +15,7 @@ info:
     Cette section liste les erreurs qui peuvent être renvoyées par les points de terminaison de l'API
    
     ### `FormatInvalide`
-      * __Significado__: Format dui message envoyé invalide
+      * __Signification__: Format dui message envoyé invalide
       * __HTTP Status Code__: [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1).
 
     
@@ -28,32 +29,10 @@ info:
 
     ## Limitation des requêtes
 
-
   version: 0.0.1
-  x-custom-info: "khady est là"
 
 servers:
   - url: https://api.test.pi-bceao.com/spi/v1
-
-# Tags
-tags:
-  - name: Transferts
-    description: Virements et paiements
-  
-## define differents validators
-x-amazon-apigateway-request-validators:
-  # validate all
-  mydefault:
-    validateRequestBody: true
-    validateRequestParameters: true
-  # validate request parameters
-  params-only:
-    validateRequestBody: false
-    validateRequestParameters: true
-  # validate request body
-  body-only:
-    validateRequestBody: true
-    validateRequestParameters: false
 
 ## the default validator applied to endpoints
 
@@ -70,14 +49,296 @@ paths:
       requestBody:
         description: Message ISO 20022 pacs.008
         content:
-          application/json:
+          application/xml:
             schema:
               $ref: '#/components/schemas/MessagePacs008'
             examples:
-              virement:
-                $ref: "#/components/examples/Pacs008ExempleVirement"
-              paiement:
-                $ref: "#/components/examples/Pacs008ExemplePaiement"
+              VIREMENT:
+                value: |
+                  <RequestPayload xmlns="urn:bceao:pi:xsd:payload.1.0.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd">
+                    <AppHdr xmlns="urn:iso:std:iso:20022:tech:xsd:head.001.001.03">
+                      <Fr>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PI</Nm>
+                            <Othr>
+                              <Id>PIUMOA</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </Fr>
+                      <To>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PSP banque TG 005</Nm>
+                            <Othr>
+                              <Id>TGB005</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </To>
+                      <BizMsgIdr>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
+                      <MsgDefIdr>camt.014.001.05</MsgDefIdr>
+                      <CreDt>2023-02-10T08:30:13.211Z</CreDt>
+                      <Sgntr></Sgntr>
+                    </AppHdr>
+                    <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.10">
+                      <FIToFICstmrCdtTrf>
+                        <GrpHdr>
+                          <MsgId>MSNB001nXydyOl7iIZSKdzEGZfWcWBaB6bY</MsgId>
+                          <CreDtTm>2023-02-21T15:35:54.362Z</CreDtTm>
+                          <NbOfTxs>1</NbOfTxs>
+                          <SttlmInf>
+                            <SttlmMtd>CLRG</SttlmMtd>
+                          </SttlmInf>
+                        </GrpHdr>
+                        <CdtTrfTxInf>
+                          <PmtId>
+                            <EndToEndId>ESNB00120230221153554KXvozkpNvhUk9e</EndToEndId>
+                          </PmtId>
+                          <PmtTpInf>
+                            <LclInstrm>
+                              <Prtry>333</Prtry>
+                            </LclInstrm>
+                            <CtgyPurp>
+                              <Prtry>VP2P</Prtry>
+                            </CtgyPurp>
+                          </PmtTpInf>
+                          <IntrBkSttlmAmt Ccy="XOF">100000</IntrBkSttlmAmt>
+                          <AccptncDtTm>2023-02-21T15:35:54.199Z</AccptncDtTm>
+                          <ChrgBr>SLEV</ChrgBr>
+                          <Dbtr>
+                            <Nm>Khady DIOP</Nm>
+                            <PstlAdr>
+                              <TwnNm>Dakar</TwnNm>
+                              <AdrLine>48.862725</AdrLine>
+                              <AdrLine>2.287592</AdrLine>
+                            </PstlAdr>
+                            <Id>
+                              <PrvtId>
+                                <DtAndPlcOfBirth>
+                                  <BirthDt>1992-02-21</BirthDt>
+                                  <CityOfBirth>Dakar</CityOfBirth>
+                                  <CtryOfBirth>SN</CtryOfBirth>
+                                </DtAndPlcOfBirth>
+                                <Othr>
+                                  <Id>2892199202358</Id>
+                                  <SchmeNm>
+                                    <Cd>NIDN</Cd>
+                                  </SchmeNm>
+                                </Othr>
+                              </PrvtId>
+                            </Id>
+                            <CtryOfRes>SN</CtryOfRes>
+                          </Dbtr>
+                          <DbtrAcct>
+                            <Id>
+                              <IBAN>SN0110333333000003122583</IBAN>
+                            </Id>
+                            <Tp>
+                              <Cd>CACC</Cd>
+                            </Tp>
+                            <Ccy>XOF</Ccy>
+                          </DbtrAcct>
+                          <DbtrAgt>
+                            <FinInstnId>
+                              <Nm>Participant payeur</Nm>
+                              <Othr>
+                                <Id>SNB001</Id>
+                              </Othr>
+                            </FinInstnId>
+                            <BrnchId>
+                              <Id>03333</Id>
+                            </BrnchId>
+                          </DbtrAgt>
+                          <CdtrAgt>
+                            <FinInstnId>
+                              <Nm>Participant paye</Nm>
+                              <Othr>
+                                <Id>SNB234</Id>
+                              </Othr>
+                            </FinInstnId>
+                            <BrnchId>
+                              <Id>02222</Id>
+                            </BrnchId>
+                          </CdtrAgt>
+                          <Cdtr>
+                            <Nm>Mariam TRAORE</Nm>
+                            <Id>
+                              <PrvtId>
+                                <DtAndPlcOfBirth>
+                                  <BirthDt>2002-08-23</BirthDt>
+                                  <CityOfBirth>Dakar</CityOfBirth>
+                                  <CtryOfBirth>SN</CtryOfBirth>
+                                </DtAndPlcOfBirth>
+                                <Othr>
+                                  <Id>5069712345607</Id>
+                                  <SchmeNm>
+                                    <Cd>NIDN</Cd>
+                                  </SchmeNm>
+                                </Othr>
+                              </PrvtId>
+                            </Id>
+                            <CtryOfRes>SN</CtryOfRes>
+                          </Cdtr>
+                          <CdtrAcct>
+                            <Id>
+                              <IBAN>SN0110222223000003122583</IBAN>
+                            </Id>
+                            <Tp>
+                              <Cd>SVGS</Cd>
+                            </Tp>
+                            <Ccy>XOF</Ccy>
+                            <Prxy>
+                              <Id>+221778520236</Id>
+                            </Prxy>
+                          </CdtrAcct>
+                        </CdtTrfTxInf>
+                      </FIToFICstmrCdtTrf>
+                    </Document>
+                  </RequestPayload>
+              PAIEMENT:
+                value: |
+                  <RequestPayload xmlns="urn:bceao:pi:xsd:payload.1.0.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd">
+                    <AppHdr xmlns="urn:iso:std:iso:20022:tech:xsd:head.001.001.03">
+                      <Fr>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PI</Nm>
+                            <Othr>
+                              <Id>PIUMOA</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </Fr>
+                      <To>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PSP banque TG 005</Nm>
+                            <Othr>
+                              <Id>TGB005</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </To>
+                      <BizMsgIdr>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
+                      <MsgDefIdr>camt.014.001.05</MsgDefIdr>
+                      <CreDt>2023-02-10T08:30:13.211Z</CreDt>
+                      <Sgntr></Sgntr>
+                    </AppHdr>
+                    <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.10">
+                      <FIToFICstmrCdtTrf>
+                        <GrpHdr>
+                          <MsgId>MSNB001nXydyOl7iIZSKdzEGZfWcWBaB6bY</MsgId>
+                          <CreDtTm>2023-02-21T15:35:54.362Z</CreDtTm>
+                          <NbOfTxs>1</NbOfTxs>
+                          <SttlmInf>
+                            <SttlmMtd>CLRG</SttlmMtd>
+                          </SttlmInf>
+                        </GrpHdr>
+                        <CdtTrfTxInf>
+                          <PmtId>
+                            <EndToEndId>ESNB00120230221153554KXvozkpNvhUk9e</EndToEndId>
+                            <TxId>1234-456789-456778-1234</TxId>
+                          </PmtId>
+                          <PmtTpInf>
+                            <LclInstrm>
+                              <Prtry>500</Prtry>
+                            </LclInstrm>
+                            <CtgyPurp>
+                              <Prtry>PP2B</Prtry>
+                            </CtgyPurp>
+                          </PmtTpInf>
+                          <IntrBkSttlmAmt Ccy="XOF">100000</IntrBkSttlmAmt>
+                          <AccptncDtTm>2023-02-21T15:35:54.199Z</AccptncDtTm>
+                          <ChrgBr>SLEV</ChrgBr>
+                          <Dbtr>
+                            <Nm>Khady DIOP</Nm>
+                            <PstlAdr>
+                              <TwnNm>Dakar</TwnNm>
+                              <AdrLine>48.862725</AdrLine>
+                              <AdrLine>2.287592</AdrLine>
+                            </PstlAdr>
+                            <Id>
+                              <PrvtId>
+                                <DtAndPlcOfBirth>
+                                  <BirthDt>1992-02-21</BirthDt>
+                                  <CityOfBirth>Dakar</CityOfBirth>
+                                  <CtryOfBirth>SN</CtryOfBirth>
+                                </DtAndPlcOfBirth>
+                                <Othr>
+                                  <Id>2892199202358</Id>
+                                  <SchmeNm>
+                                    <Cd>NIDN</Cd>
+                                  </SchmeNm>
+                                </Othr>
+                              </PrvtId>
+                            </Id>
+                            <CtryOfRes>SN</CtryOfRes>
+                          </Dbtr>
+                          <DbtrAcct>
+                            <Id>
+                              <IBAN>SN0110333333000003122583</IBAN>
+                            </Id>
+                            <Tp>
+                              <Cd>CACC</Cd>
+                            </Tp>
+                            <Ccy>XOF</Ccy>
+                          </DbtrAcct>
+                          <DbtrAgt>
+                            <FinInstnId>
+                              <Nm>Participant payeur</Nm>
+                              <Othr>
+                                <Id>SNB001</Id>
+                              </Othr>
+                            </FinInstnId>
+                            <BrnchId>
+                              <Id>03333</Id>
+                            </BrnchId>
+                          </DbtrAgt>
+                          <CdtrAgt>
+                            <FinInstnId>
+                              <Nm>Participant Paye</Nm>
+                              <Othr>
+                                <Id>SNB234</Id>
+                              </Othr>
+                            </FinInstnId>
+                            <BrnchId>
+                              <Id>05689</Id>
+                            </BrnchId>
+                          </CdtrAgt>
+                          <Cdtr>
+                            <Nm>Boutique XXX</Nm>
+                            <Id>
+                              <OrgId>
+                                <Othr>
+                                  <Id>00014622G3</Id>
+                                  <SchmeNm>
+                                    <Cd>TXID</Cd>
+                                  </SchmeNm>
+                                </Othr>
+                              </OrgId>
+                            </Id>
+                            <CtryOfRes>SN</CtryOfRes>
+                          </Cdtr>
+                          <CdtrAcct>
+                            <Id>
+                              <IBAN>SN0110568943000003122583</IBAN>
+                            </Id>
+                            <Tp>
+                              <Cd>SVGS</Cd>
+                            </Tp>
+                            <Ccy>XOF</Ccy>
+                            <Prxy>
+                              <Id>b4f7c90a-c746-11ed-afa1-0242ac120002</Id>
+                            </Prxy>
+                          </CdtrAcct>
+                        </CdtTrfTxInf>
+                      </FIToFICstmrCdtTrf>
+                    </Document>
+                  </RequestPayload>
         required: true
       responses:
         '201':
@@ -86,22 +347,6 @@ paths:
           $ref: "#/components/responses/FormatInvalide"
         '401':
           description: Autorisations manquantes
-      x-amazon-apigateway-integration:
-        responses:
-          default:
-            statusCode: '201'
-            responseTemplates:
-              application/xml: Empty
-              application/json: Empty
-        uri: "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:api-spi-transfert-dev-controleFormatPacs008/invocations"
-        credentials: arn:${AWS::Partition}:iam::${AWS::AccountId}:role/SPI-RestApiExecutionRole
-        requestParameters:
-          integration.request.header.Content-Type: '''application/x-www-form-urlencoded'''
-        passthroughBehavior: WHEN_NO_MATCH
-        httpMethod: POST
-        type: aws_proxy
-      security:
-        - myAuthorizer: []
 
   /transferts/rapports:
     post:
@@ -113,14 +358,223 @@ paths:
       requestBody:
         description: Message ISO 20022 pacs.002
         content:
-          application/json:
+          application/xml:
             schema:
               $ref: '#/components/schemas/MessagePacs002'
             examples:
-              reponsePositiveVirement:
-                $ref: "#/components/examples/Pacs002ExempleVirementReponsePositive"
-              reponseNegativeVirement:
-                $ref: "#/components/examples/Pacs002ExempleVirementReponseNegative"
+              AVIS_DEBIT:
+                value: |
+                  <RequestPayload xmlns="urn:bceao:pi:xsd:payload.1.0.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd">
+                    <AppHdr xmlns="urn:iso:std:iso:20022:tech:xsd:head.001.001.03">
+                      <Fr>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PI</Nm>
+                            <Othr>
+                              <Id>PIUMOA</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </Fr>
+                      <To>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PSP banque TG 005</Nm>
+                            <Othr>
+                              <Id>TGB005</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </To>
+                      <BizMsgIdr>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
+                      <MsgDefIdr>camt.014.001.05</MsgDefIdr>
+                      <CreDt>2023-02-10T08:30:13.211Z</CreDt>
+                      <Sgntr></Sgntr>
+                    </AppHdr>
+                    <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.002.001.12">
+                      <FIToFIPmtStsRpt>
+                        <GrpHdr>
+                          <MsgId>MPIUMOAnXydyOl7iIZSKdzEGZfWcWBaB6bY</MsgId>
+                          <CreDtTm>2023-02-21T15:36:00.150Z</CreDtTm>
+                        </GrpHdr>
+                        <TxInfAndSts>
+                          <OrgnlGrpInf>
+                            <OrgnlMsgId>MSNB001nXydyOl7iIZSKdzEGZfWcWBaB6bY</OrgnlMsgId>
+                            <OrgnlMsgNmId>pacs.008.001.10</OrgnlMsgNmId>
+                            <OrgnlCreDtTm>2023-02-21T15:35:54.362Z</OrgnlCreDtTm>
+                          </OrgnlGrpInf>
+                          <OrgnlEndToEndId>ESNB00120230208153623X7cQSIJnmLCBvm</OrgnlEndToEndId>
+                          <TxSts>ACSC</TxSts>
+                          <FctvIntrBkSttlmDt>
+                            <DtTm>2023-02-21T15:35:59.362Z</DtTm>
+                          </FctvIntrBkSttlmDt>
+                        </TxInfAndSts>
+                      </FIToFIPmtStsRpt>
+                    </Document>
+                  </RequestPayload>
+              AVIS_CREDIT:
+                value: |
+                  <RequestPayload xmlns="urn:bceao:pi:xsd:payload.1.0.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd">
+                    <AppHdr xmlns="urn:iso:std:iso:20022:tech:xsd:head.001.001.03">
+                      <Fr>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PI</Nm>
+                            <Othr>
+                              <Id>PIUMOA</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </Fr>
+                      <To>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PSP banque TG 005</Nm>
+                            <Othr>
+                              <Id>TGB005</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </To>
+                      <BizMsgIdr>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
+                      <MsgDefIdr>camt.014.001.05</MsgDefIdr>
+                      <CreDt>2023-02-10T08:30:13.211Z</CreDt>
+                      <Sgntr></Sgntr>
+                    </AppHdr>
+                    <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.002.001.12">
+                      <FIToFIPmtStsRpt>
+                        <GrpHdr>
+                          <MsgId>MPIUMOAnXydyOl7iIZSKdzEGZfWcWBaB6bY</MsgId>
+                          <CreDtTm>2023-02-21T15:36:00.150Z</CreDtTm>
+                        </GrpHdr>
+                        <TxInfAndSts>
+                          <OrgnlGrpInf>
+                            <OrgnlMsgId>MPIUMOAnXydyOl7iIZSKdzEGZfWcWBaB6bY</OrgnlMsgId>
+                            <OrgnlMsgNmId>pacs.008.001.10</OrgnlMsgNmId>
+                            <OrgnlCreDtTm>2023-02-21T15:35:58.205Z</OrgnlCreDtTm>
+                          </OrgnlGrpInf>
+                          <OrgnlEndToEndId>ESNB00120230208153623X7cQSIJnmLCBvm</OrgnlEndToEndId>
+                          <TxSts>ACCC</TxSts>
+                          <FctvIntrBkSttlmDt>
+                            <DtTm>2023-02-21T15:35:59.362Z</DtTm>
+                          </FctvIntrBkSttlmDt>
+                        </TxInfAndSts>
+                      </FIToFIPmtStsRpt>
+                    </Document>
+                  </RequestPayload>
+              MODIF_CODE_SERVIVE:
+                value: |
+                  <RequestPayload xmlns="urn:bceao:pi:xsd:payload.1.0.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd">
+                    <AppHdr xmlns="urn:iso:std:iso:20022:tech:xsd:head.001.001.03">
+                      <Fr>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PI</Nm>
+                            <Othr>
+                              <Id>PIUMOA</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </Fr>
+                      <To>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PSP banque TG 005</Nm>
+                            <Othr>
+                              <Id>TGB005</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </To>
+                      <BizMsgIdr>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
+                      <MsgDefIdr>camt.014.001.05</MsgDefIdr>
+                      <CreDt>2023-02-10T08:30:13.211Z</CreDt>
+                      <Sgntr></Sgntr>
+                    </AppHdr>
+                    <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.002.001.12">
+                      <FIToFIPmtStsRpt>
+                        <GrpHdr>
+                          <MsgId>MPIUMOAnXydyOl7iIZSKdzEGZfWcWBaB6bY</MsgId>
+                          <CreDtTm>2023-05-23T15:36:00.150Z</CreDtTm>
+                        </GrpHdr>
+                        <TxInfAndSts>
+                          <OrgnlGrpInf>
+                            <OrgnlMsgId>MPIUMOAnXydyOl7iIZSKdzEGZfWcWBaB6bY</OrgnlMsgId>
+                            <OrgnlMsgNmId>pacs.008.001.10</OrgnlMsgNmId>
+                            <OrgnlCreDtTm>2023-02-21T15:35:58.205Z</OrgnlCreDtTm>
+                          </OrgnlGrpInf>
+                          <OrgnlEndToEndId>ESNB00120230208153623X7cQSIJnmLCBvm</OrgnlEndToEndId>
+                          <TxSts>ACCC</TxSts>
+                          <FctvIntrBkSttlmDt>
+                            <DtTm>2023-05-23T15:35:59.362Z</DtTm>
+                          </FctvIntrBkSttlmDt>
+                          <OrgnlTxRef>
+                            <PmtTpInf>
+                                <CtgyPurp>
+                                    <Prtry>PP2P</Prtry>
+                                </CtgyPurp>
+                            </PmtTpInf>
+                          </OrgnlTxRef>
+                        </TxInfAndSts>
+                      </FIToFIPmtStsRpt>
+                    </Document>
+                  </RequestPayload>
+              REJET:
+                value: |
+                  <RequestPayload xmlns="urn:bceao:pi:xsd:payload.1.0.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd">
+                    <AppHdr xmlns="urn:iso:std:iso:20022:tech:xsd:head.001.001.03">
+                      <Fr>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PI</Nm>
+                            <Othr>
+                              <Id>PIUMOA</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </Fr>
+                      <To>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PSP banque TG 005</Nm>
+                            <Othr>
+                              <Id>TGB005</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </To>
+                      <BizMsgIdr>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
+                      <MsgDefIdr>camt.014.001.05</MsgDefIdr>
+                      <CreDt>2023-02-10T08:30:13.211Z</CreDt>
+                      <Sgntr></Sgntr>
+                    </AppHdr>
+                    <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.002.001.12">
+                      <FIToFIPmtStsRpt>
+                        <GrpHdr>
+                          <MsgId>MPIUMOAnXydyOl7iIZSKdzEGZfWcWBaB6bY</MsgId>
+                          <CreDtTm>2023-02-21T15:36:00.150Z</CreDtTm>
+                        </GrpHdr>
+                        <TxInfAndSts>
+                          <OrgnlGrpInf>
+                            <OrgnlMsgId>MSNB001nXydyOl7iIZSKdzEGZfWcWBaB6bY</OrgnlMsgId>
+                            <OrgnlMsgNmId>pacs.008.001.10</OrgnlMsgNmId>
+                            <OrgnlCreDtTm>2023-02-21T15:35:58.205Z</OrgnlCreDtTm>
+                          </OrgnlGrpInf>
+                          <OrgnlEndToEndId>ESNB00120230208153623X7cQSIJnmLCBvm</OrgnlEndToEndId>
+                          <TxSts>RJCT</TxSts>
+                          <StsRsnInf>
+                            <Rsn>
+                              <Cd>AG11</Cd>
+                            </Rsn>
+                          </StsRsnInf>
+                        </TxInfAndSts>
+                      </FIToFIPmtStsRpt>
+                    </Document>
+                  </RequestPayload>
         required: true
       responses:
         '201':
@@ -129,22 +583,6 @@ paths:
           $ref: "#/components/responses/FormatInvalide"
         '401':
           description: Autorisations manquantes
-      x-amazon-apigateway-integration:
-        responses:
-          default:
-            statusCode: '201'
-            responseTemplates:
-              application/xml: Empty
-              application/json: Empty
-        uri: "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:api-spi-transfert-dev-controleFormatPacs002/invocations"
-        credentials: arn:${AWS::Partition}:iam::${AWS::AccountId}:role/SPI-RestApiExecutionRole
-        requestParameters:
-          integration.request.header.Content-Type: '''application/x-www-form-urlencoded'''
-        passthroughBehavior: when_no_match
-        httpMethod: POST
-        type: aws_proxy
-      security:
-        - myAuthorizer: []  
 
   /transferts/statuts:
     post:
@@ -156,12 +594,52 @@ paths:
       requestBody:
         description: Message ISO 20022 pacs.028
         content:
-          application/json:
+          application/xml:
             schema:
               $ref: '#/components/schemas/MessagePacs028'
             examples:
-              massagePacs028StatutVirement:
-                $ref: "#/components/examples/Pacs028ExempleVirementStatut"
+              RECHERCHE_STATUT_VIREMENT:
+                value: |
+                  <RequestPayload xmlns="urn:bceao:pi:xsd:payload.1.0.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd">
+                    <AppHdr xmlns="urn:iso:std:iso:20022:tech:xsd:head.001.001.03">
+                      <Fr>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PI</Nm>
+                            <Othr>
+                              <Id>PIUMOA</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </Fr>
+                      <To>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PSP banque TG 005</Nm>
+                            <Othr>
+                              <Id>TGB005</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </To>
+                      <BizMsgIdr>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
+                      <MsgDefIdr>camt.014.001.05</MsgDefIdr>
+                      <CreDt>2023-02-10T08:30:13.211Z</CreDt>
+                      <Sgntr></Sgntr>
+                    </AppHdr>
+                    <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.028.001.05">
+                      <FIToFIPmtStsReq>
+                        <GrpHdr>
+                          <MsgId>MSNF001nXydyOl7iIZSKdzEGZfWcWBaB6bY</MsgId>
+                          <CreDtTm>2023-02-21T15:36:00.150Z</CreDtTm>
+                        </GrpHdr>
+                        <TxInf>
+                            <OrgnlEndToEndId>ESNF00120230208153623X7cQSIJnmLCBvm</OrgnlEndToEndId>
+                        </TxInf>
+                      </FIToFIPmtStsReq>
+                    </Document>
+                  </RequestPayload>
         required: true
       responses:
         '200':
@@ -170,22 +648,6 @@ paths:
           $ref: "#/components/responses/FormatInvalide"
         '401':
           description: Autorisations manquantes
-      x-amazon-apigateway-integration:
-        responses:
-          default:
-            statusCode: '201'
-            responseTemplates:
-              application/xml: Empty
-              application/json: Empty
-        uri: "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:pisfn-routage-virement-statut-dev-traiterDemandeStatut/invocations"
-        credentials: arn:${AWS::Partition}:iam::${AWS::AccountId}:role/SPI-RestApiExecutionRole
-        requestParameters:
-          integration.request.header.Content-Type: '''application/x-www-form-urlencoded'''
-        passthroughBehavior: WHEN_NO_MATCH
-        httpMethod: POST
-        type: aws_proxy
-      security:
-        - myAuthorizer: []
 
   /verifications-identites:
     post:
@@ -197,12 +659,150 @@ paths:
       requestBody:
         description: Message ISO 20022 acmt.023
         content:
-          application/json:
+          application/xml:
             schema:
               $ref: '#/components/schemas/MessageAcmt023'
             examples:
-              messageVerificationIdentiteAcmt023:
-                $ref: "#/components/examples/Acmt023ExempleVerification"
+              VERIFICATION_IDENTITE_TYPE_OTHER:
+                value: |
+                  <RequestPayload xmlns="urn:bceao:pi:xsd:payload.1.0.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd">
+                    <AppHdr xmlns="urn:iso:std:iso:20022:tech:xsd:head.001.001.03">
+                      <Fr>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PI</Nm>
+                            <Othr>
+                              <Id>PIUMOA</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </Fr>
+                      <To>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PSP banque TG 005</Nm>
+                            <Othr>
+                              <Id>TGB005</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </To>
+                      <BizMsgIdr>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
+                      <MsgDefIdr>camt.014.001.05</MsgDefIdr>
+                      <CreDt>2023-02-10T08:30:13.211Z</CreDt>
+                      <Sgntr></Sgntr>
+                    </AppHdr>
+                    <Document xmlns="urn:iso:std:iso:20022:tech:xsd:acmt.023.001.03">
+                      <IdVrfctnReq>
+                        <Assgnmt>
+                          <MsgId>MSNB001nXydyOl7iIZSKdzEGZfWcWBaB6bY</MsgId>
+                          <CreDtTm>2023-02-21T15:30:00.250Z</CreDtTm>
+                          <Assgnr>
+                            <Agt>
+                              <FinInstnId>
+                                <Nm>PSP Banque SN 001</Nm>
+                                <Othr>
+                                    <Id>SNB001</Id>
+                                </Othr>
+                              </FinInstnId>
+                            </Agt>
+                          </Assgnr>
+                          <Assgne>
+                            <Agt>
+                              <FinInstnId>
+                                <Nm>PSP EME CI 001</Nm>
+                                <Othr>
+                                    <Id>CIC001</Id>
+                                </Othr>
+                              </FinInstnId>
+                            </Agt>
+                          </Assgne>
+                        </Assgnmt>
+                        <Vrfctn>
+                          <Id>ESNB00120230221153554KXvozkpNvhUk9e</Id>
+                          <PtyAndAcctId>
+                            <Acct>
+                              <Id>
+                                <Othr>
+                                  <Id>+2250771299999</Id>
+                                </Othr>
+                              </Id>
+                            </Acct>
+                          </PtyAndAcctId>
+                        </Vrfctn>
+                      </IdVrfctnReq>
+                    </Document>
+                  </RequestPayload>
+              VERIFICATION_IDENTITE_TYPE_IBAN:
+                value: |
+                  <RequestPayload xmlns="urn:bceao:pi:xsd:payload.1.0.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd">
+                    <AppHdr xmlns="urn:iso:std:iso:20022:tech:xsd:head.001.001.03">
+                      <Fr>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PI</Nm>
+                            <Othr>
+                              <Id>PIUMOA</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </Fr>
+                      <To>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PSP banque TG 005</Nm>
+                            <Othr>
+                              <Id>TGB005</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </To>
+                      <BizMsgIdr>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
+                      <MsgDefIdr>camt.014.001.05</MsgDefIdr>
+                      <CreDt>2023-02-10T08:30:13.211Z</CreDt>
+                      <Sgntr></Sgntr>
+                    </AppHdr>
+                    <Document xmlns="urn:iso:std:iso:20022:tech:xsd:acmt.023.001.03">
+                      <IdVrfctnReq>
+                        <Assgnmt>
+                          <MsgId>MSNB001nXydyOl7iIZSKdzEGZfWcWBaB6bY</MsgId>
+                          <CreDtTm>2023-02-21T15:30:00.250Z</CreDtTm>
+                          <Assgnr>
+                            <Agt>
+                              <FinInstnId>
+                                <Nm>PSP Banque SN 001</Nm>
+                                <Othr>
+                                    <Id>SNB001</Id>
+                                </Othr>
+                              </FinInstnId>
+                            </Agt>
+                          </Assgnr>
+                          <Assgne>
+                            <Agt>
+                              <FinInstnId>
+                                <Nm>PSP Banque CI 030</Nm>
+                                <Othr>
+                                    <Id>CIB030</Id>
+                                </Othr>
+                              </FinInstnId>
+                            </Agt>
+                          </Assgne>
+                        </Assgnmt>
+                        <Vrfctn>
+                          <Id>ESNB00120230221153554KXvozkpNvhUk9e</Id>
+                          <PtyAndAcctId>
+                            <Acct>
+                              <Id>
+                                <IBAN>CI0110568943000003122583</IBAN>
+                              </Id>
+                            </Acct>
+                          </PtyAndAcctId>
+                        </Vrfctn>
+                      </IdVrfctnReq>
+                    </Document>
+                  </RequestPayload>
         required: true
       responses:
         '201':
@@ -211,22 +811,6 @@ paths:
           $ref: "#/components/responses/FormatInvalide"
         '401':
           description: Autorisations manquantes
-      x-amazon-apigateway-integration:
-        responses:
-          default:
-            statusCode: '201'
-            responseTemplates:
-              application/xml: Empty
-              application/json: Empty
-        uri: "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:api-spi-verifications-dev-controleFormatAcmt023/invocations"
-        credentials: arn:${AWS::Partition}:iam::${AWS::AccountId}:role/SPI-RestApiExecutionRole
-        requestParameters:
-          integration.request.header.Content-Type: '''application/x-www-form-urlencoded'''
-        passthroughBehavior: when_no_match
-        httpMethod: POST
-        type: aws_proxy
-      security:
-        - myAuthorizer: []  
 
   /verifications-identites/rapports:
     post:
@@ -238,14 +822,297 @@ paths:
       requestBody:
         description: Message ISO 20022 acmt.024
         content:
-          application/json:
+          application/xml:
             schema:
               $ref: '#/components/schemas/MessageAcmt024'
             examples:
-              messageReponsePositiveVerificationIdentiteAcmt024:
-                $ref: "#/components/examples/Acmt024ExempleVerificationReponsePositive"
-              messageReponseNegativeVerificationIdentiteAcmt024:
-                $ref: "#/components/examples/Acmt024ExempleVerificationReponseNegative"
+              REPONSE_VERIFICATION_IDENTITE_TYPE_OTHER:
+                value: |
+                  <RequestPayload xmlns="urn:bceao:pi:xsd:payload.1.0.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd">
+                    <AppHdr xmlns="urn:iso:std:iso:20022:tech:xsd:head.001.001.03">
+                      <Fr>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PI</Nm>
+                            <Othr>
+                              <Id>PIUMOA</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </Fr>
+                      <To>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PSP banque TG 005</Nm>
+                            <Othr>
+                              <Id>TGB005</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </To>
+                      <BizMsgIdr>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
+                      <MsgDefIdr>camt.014.001.05</MsgDefIdr>
+                      <CreDt>2023-02-10T08:30:13.211Z</CreDt>
+                      <Sgntr></Sgntr>
+                    </AppHdr>
+                    <Document xmlns="urn:iso:std:iso:20022:tech:xsd:acmt.024.001.03">
+                      <IdVrfctnRpt>
+                        <Assgnmt>
+                          <MsgId>MCIC001KIjhjghgtuuiyiyLKIRhpihMkeuh</MsgId>
+                          <CreDtTm>2023-02-21T15:30:00.850Z</CreDtTm>
+                          <Assgnr>
+                            <Agt>
+                              <FinInstnId>
+                                <Nm>PSP Banque SN 001</Nm>
+                                <Othr>
+                                  <Id>SNB001</Id>
+                                </Othr>
+                              </FinInstnId>
+                            </Agt>
+                          </Assgnr>
+                          <Assgne>
+                            <Agt>
+                              <FinInstnId>
+                                <Nm>PSP EME CI 001</Nm>
+                                <Othr>
+                                  <Id>CIC001</Id>
+                                </Othr>
+                              </FinInstnId>
+                            </Agt>
+                          </Assgne>
+                        </Assgnmt>
+                        <OrgnlAssgnmt>
+                          <MsgId>MPIUMOAnXydyOl7iIZSKdzEGZfWcWBa9999</MsgId>
+                        </OrgnlAssgnmt>
+                        <Rpt>
+                          <OrgnlId>ESNB00120230221153554KXvozkpNvhUk9e</OrgnlId>
+                          <Vrfctn>true</Vrfctn>
+                          <UpdtdPtyAndAcctId>
+                            <Pty>
+                              <Nm>Mariama Traore</Nm>
+                              <Id>
+                                <PrvtId>
+                                  <DtAndPlcOfBirth>
+                                    <BirthDt>2002-08-23</BirthDt>
+                                    <CityOfBirth>Dakar</CityOfBirth>
+                                    <CtryOfBirth>SN</CtryOfBirth>
+                                  </DtAndPlcOfBirth>
+                                  <Othr>
+                                    <Id>5069712345607</Id>
+                                    <SchmeNm>
+                                      <Cd>NIDN</Cd>
+                                    </SchmeNm>
+                                  </Othr>
+                                </PrvtId>
+                              </Id>               
+                              <CtryOfRes>CI</CtryOfRes>
+                            </Pty>
+                            <Acct>
+                              <Id>
+                                <Othr>
+                                  <Id>+2250771299999</Id>
+                                </Othr>
+                              </Id>
+                              <Tp>
+                                <Cd>TRAN</Cd>
+                              </Tp>
+                              <Ccy>XOF</Ccy>
+                              <Nm>P</Nm>
+                            </Acct>
+                            <Agt>
+                              <FinInstnId>
+                                <Nm>PSP EME CI 001</Nm>
+                                <Othr>
+                                  <Id>CIC001</Id>
+                                </Othr>
+                              </FinInstnId> 
+                              <BrnchId>
+                                <Id>00000</Id>
+                              </BrnchId>
+                            </Agt>
+                          </UpdtdPtyAndAcctId>
+                        </Rpt>
+                      </IdVrfctnRpt>
+                    </Document>
+                  </RequestPayload>
+              REPONSE_VERIFICATION_IDENTITE_TYPE_IBAN:
+                value: |
+                  <RequestPayload xmlns="urn:bceao:pi:xsd:payload.1.0.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd">
+                    <AppHdr xmlns="urn:iso:std:iso:20022:tech:xsd:head.001.001.03">
+                      <Fr>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PI</Nm>
+                            <Othr>
+                              <Id>PIUMOA</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </Fr>
+                      <To>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PSP banque TG 005</Nm>
+                            <Othr>
+                              <Id>TGB005</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </To>
+                      <BizMsgIdr>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
+                      <MsgDefIdr>camt.014.001.05</MsgDefIdr>
+                      <CreDt>2023-02-10T08:30:13.211Z</CreDt>
+                      <Sgntr></Sgntr>
+                    </AppHdr>
+                    <Document xmlns="urn:iso:std:iso:20022:tech:xsd:acmt.024.001.03">
+                      <IdVrfctnRpt>
+                          <Assgnmt>
+                            <MsgId>MCIB030KIjhjghgtuuiyiyLKIRhpihMkeuh</MsgId>
+                            <CreDtTm>2023-02-21T15:30:00.850Z</CreDtTm>
+                            <Assgnr>
+                              <Agt>
+                                <FinInstnId>
+                                  <Nm>PSP Banque SN 001</Nm>
+                                  <Othr>
+                                    <Id>SNB001</Id>
+                                  </Othr>
+                                </FinInstnId>
+                              </Agt>
+                            </Assgnr>
+                            <Assgne>
+                              <Agt>
+                                <FinInstnId>
+                                  <Nm>PSP Banque CI 030</Nm>
+                                  <Othr>
+                                    <Id>CIB030</Id>
+                                  </Othr>
+                                </FinInstnId>
+                              </Agt>
+                            </Assgne>
+                          </Assgnmt>
+                          <OrgnlAssgnmt>
+                            <MsgId>MPIUMOAnXydyOl7iIZSKdzEGZfWcWBa9999</MsgId>
+                          </OrgnlAssgnmt>
+                          <Rpt>
+                            <OrgnlId>ESNB00120230221153554KXvozkpNvhUk9e</OrgnlId>
+                            <Vrfctn>true</Vrfctn>
+                            <UpdtdPtyAndAcctId>
+                              <Pty>
+                                <Nm>Seini Doucoure</Nm>
+                                <Id>
+                                  <PrvtId>
+                                    <DtAndPlcOfBirth>
+                                      <BirthDt>1998-12-23</BirthDt>
+                                      <CityOfBirth>Yamoussoukro</CityOfBirth>
+                                      <CtryOfBirth>CI</CtryOfBirth>
+                                    </DtAndPlcOfBirth>
+                                    <Othr>
+                                      <Id>0956812345</Id>
+                                      <SchmeNm>
+                                        <Cd>NIDN</Cd>
+                                      </SchmeNm>
+                                    </Othr>
+                                  </PrvtId>
+                                </Id> 
+                                <CtryOfRes>CI</CtryOfRes>
+                              </Pty>
+                              <Acct>
+                                <Id>
+                                  <IBAN>CI0110568943000003122583</IBAN>
+                                </Id>
+                                <Tp>
+                                  <Cd>CACC</Cd>
+                                </Tp>
+                                <Ccy>XOF</Ccy>
+                                <Nm>P</Nm>
+                              </Acct>
+                              <Agt>
+                                <FinInstnId>
+                                  <Nm>PSP Banque CI 030</Nm>
+                                  <Othr>
+                                    <Id>CIC030</Id>
+                                  </Othr>
+                                </FinInstnId> 
+                                <BrnchId>
+                                  <Id>05689</Id>
+                                </BrnchId>
+                              </Agt>
+                            </UpdtdPtyAndAcctId>
+                          </Rpt>
+                      </IdVrfctnRpt>
+                    </Document>
+                  </RequestPayload>
+              REJET_VERIFICATION_IDENTITE:
+                value: |
+                  <RequestPayload xmlns="urn:bceao:pi:xsd:payload.1.0.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd">
+                    <AppHdr xmlns="urn:iso:std:iso:20022:tech:xsd:head.001.001.03">
+                      <Fr>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PI</Nm>
+                            <Othr>
+                              <Id>PIUMOA</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </Fr>
+                      <To>
+                        <FIId>
+                          <FinInstnId>
+                            <Nm>PSP banque TG 005</Nm>
+                            <Othr>
+                              <Id>TGB005</Id>
+                            </Othr>
+                          </FinInstnId>
+                        </FIId>
+                      </To>
+                      <BizMsgIdr>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
+                      <MsgDefIdr>camt.014.001.05</MsgDefIdr>
+                      <CreDt>2023-02-10T08:30:13.211Z</CreDt>
+                      <Sgntr></Sgntr>
+                    </AppHdr>
+                    <Document xmlns="urn:iso:std:iso:20022:tech:xsd:acmt.024.001.03">
+                      <IdVrfctnRpt>
+                        <Assgnmt>
+                          <MsgId>MCIB030KIjhjghgtuuiyiyLKIRhpihMkeuh</MsgId>
+                          <CreDtTm>2023-02-21T15:30:00.850Z</CreDtTm>
+                          <Assgnr>
+                            <Agt>
+                              <FinInstnId>
+                                <Nm>PSP Banque SN 001</Nm>
+                                <Othr>
+                                  <Id>SNB001</Id>
+                                </Othr>
+                              </FinInstnId>
+                            </Agt>
+                          </Assgnr>
+                          <Assgne>
+                            <Agt>
+                              <FinInstnId>
+                                <Nm>PSP Banque CI 030</Nm>
+                                <Othr>
+                                  <Id>CIB030</Id>
+                                </Othr>
+                              </FinInstnId>
+                            </Agt>
+                          </Assgne>
+                        </Assgnmt>
+                        <OrgnlAssgnmt>
+                          <MsgId>MPIUMOAnXydyOl7iIZSKdzEGZfWcWBa9999</MsgId>
+                        </OrgnlAssgnmt>
+                        <Rpt>
+                          <OrgnlId>ESNB00120230221153554KXvozkpNvhUk9e</OrgnlId>
+                          <Vrfctn>false</Vrfctn>
+                          <Rsn>
+                            <Cd>AC01</Cd>
+                          </Rsn>
+                        </Rpt>
+                      </IdVrfctnRpt>
+                    </Document>
+                  </RequestPayload>
         required: true
       responses:
         '201':
@@ -254,41 +1121,8 @@ paths:
           $ref: "#/components/responses/FormatInvalide"
         '401':
           description: Autorisations manquantes
-      x-amazon-apigateway-integration:
-        responses:
-          default:
-            statusCode: '201'
-            responseTemplates:
-              application/xml: Empty
-              application/json: Empty
-        uri: "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:api-spi-verifications-dev-controleFormatAcmt024/invocations"
-        credentials: arn:${AWS::Partition}:iam::${AWS::AccountId}:role/SPI-RestApiExecutionRole
-        requestParameters:
-          integration.request.header.Content-Type: '''application/x-www-form-urlencoded'''
-        passthroughBehavior: when_no_match
-        httpMethod: POST
-        type: aws_proxy
-      security:
-        - myAuthorizer: []  
 
 components:
-  # *********** SECURITY
-  securitySchemes:
-    api_key:
-      type: apiKey
-      name: x-api-key
-      in: header
-      
-    myAuthorizer:
-      type: "apiKey"
-      name: "Authorization"
-      in: "header"
-      x-amazon-apigateway-authtype: "custom"
-      x-amazon-apigateway-authorizer:
-        type: "request"
-        authorizerUri: "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:pisfn-alias-api-authorizer-dev-check/invocations"
-        authorizerCredentials: "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/SPI-RestApiExecutionRole"
-        authorizerResultTtlInSeconds: 0
 
   # *********** SCHEMAS
   schemas:
@@ -296,456 +1130,504 @@ components:
     # pacs.0008
     MessagePacs008:
       type: object
+      required:
+        - RequestPayload
       properties:
-        # BAH Header 
-        AppHdr:
-          $ref: "#/components/schemas/MessageAppHeader"
-        # Document
-        Document:
+        RequestPayload:
           type: object
+          required:
+            - AppHdr
+            - Document  
           properties:
-            FIToFICstmrCdtTrf:
+            '@xmlns':       # Namespace declaration
+              type: string
+              enum:
+                - urn:bceao:pi:xsd:payload.1.0.0
+            # BAH Header 
+            AppHdr:
+              $ref: "#/components/schemas/MessageAppHeader"
+            # Document
+            Document:
               type: object
               properties:
-                # Group Header
-                GrpHdr:
+                '@xmlns':       # Namespace declaration
+                  type: string
+                  enum:
+                    - urn:iso:std:iso:20022:tech:xsd:pacs.008.001.10
+                FIToFICstmrCdtTrf:
                   type: object
                   properties:
-                    MsgId:
-                      type: string
-                    CreDtTm:
-                      type: string
-                      format: date-time
-                    NbOfTxs:
-                      type: integer
-                      minimum: 1
-                      maximum: 1
-                    SttlmInf:
+                    # Group Header
+                    GrpHdr:
                       type: object
                       properties:
-                        SttlmMtd:
-                          $ref: "#/components/schemas/SettlementMethod1CodeCLRG"
-                  required:
-                    - MsgId
-                    - CreDtTm  
-                    - NbOfTxs
-                    - SttlmInf
-                # CreditTransferTransaction
-                CdtTrfTxInf:
-                  type: object
-                  properties:
-                    PmtId:
-                      type: object
-                      properties:
-                        EndToEndId:
-                          $ref: "#/components/schemas/EndToEndId"
+                        MsgId:
+                          type: string
+                        CreDtTm:
+                          type: string
+                          format: date-time
+                        NbOfTxs:
+                          type: integer
+                          minimum: 1
+                          maximum: 1
+                        SttlmInf:
+                          type: object
+                          properties:
+                            SttlmMtd:
+                              $ref: "#/components/schemas/SettlementMethod1CodeCLRG"
                       required:
-                        - EndToEndId
-                    PmtTpInf:
+                        - MsgId
+                        - CreDtTm  
+                        - NbOfTxs
+                        - SttlmInf
+                    # CreditTransferTransaction
+                    CdtTrfTxInf:
                       type: object
                       properties:
-                        SvcLvl:
+                        PmtId:
                           type: object
                           properties:
-                            Prtry:
-                              type: string
+                            EndToEndId:
+                              $ref: "#/components/schemas/EndToEndId"
                           required:
-                            - Prtry
-                        LclInstrm:
+                            - EndToEndId
+                        PmtTpInf:
                           type: object
                           properties:
-                            Prtry:
-                              type: string
+                            SvcLvl:
+                              type: object
+                              properties:
+                                Prtry:
+                                  type: string
+                              required:
+                                - Prtry
+                            LclInstrm:
+                              type: object
+                              properties:
+                                Prtry:
+                                  type: string
+                              required:
+                                - Prtry
+                            CtgyPurp:
+                              type: object
+                              properties:
+                                Prtry:
+                                  type: string
+                              required:
+                                - Prtry
                           required:
-                            - Prtry
-                        CtgyPurp:
-                          type: object
-                          properties:
-                            Prtry:
-                              type: string
-                          required:
-                            - Prtry
+                            - LclInstrm
+                            - CtgyPurp
+                        IntrBkSttlmAmt:
+                          $ref: "#/components/schemas/IntrBkSttlmAmt"
+                          # type: object
+                          # properties:
+                          #   Ccy:
+                          #     type: string
+                          #     xml:
+                          #       attribute: true
+                          #   valeur:
+                          #     type: integer
+                          #     min: 1
+                        AccptncDtTm:
+                          type: string
+                          format: date-time
+                        ChrgBr:
+                          $ref: "#/components/schemas/ChargeBearerType1CodeSLEV"
+                        Dbtr:
+                          $ref: "#/components/schemas/PartyIdentification135ClientPayeurOuPaye"
+                        DbtrAcct:
+                          $ref: "#/components/schemas/CashAccount"
+                        DbtrAgt:
+                          $ref: "#/components/schemas/BranchAndFinancialInstitutionIdentification6PSPPayeurOuPaye"
+                        CdtrAgt:
+                          $ref: "#/components/schemas/BranchAndFinancialInstitutionIdentification6PSPPayeurOuPaye"
+                        Cdtr:
+                          $ref: "#/components/schemas/PartyIdentification135ClientPayeurOuPaye"
+                        CdtrAcct:
+                          $ref: "#/components/schemas/CashAccountCreditor"
                       required:
-                        - LclInstrm
-                        - CtgyPurp
-                    IntrBkSttlmAmt:
-                      $ref: "#/components/schemas/IntrBkSttlmAmt"
-                      # type: object
-                      # properties:
-                      #   Ccy:
-                      #     type: string
-                      #     xml:
-                      #       attribute: true
-                      #   valeur:
-                      #     type: integer
-                      #     min: 1
-                    AccptncDtTm:
-                      type: string
-                      format: date-time
-                    ChrgBr:
-                      $ref: "#/components/schemas/ChargeBearerType1CodeSLEV"
-                    Dbtr:
-                      $ref: "#/components/schemas/PartyIdentification135ClientPayeurOuPaye"
-                    DbtrAcct:
-                      $ref: "#/components/schemas/CashAccount"
-                    DbtrAgt:
-                      $ref: "#/components/schemas/BranchAndFinancialInstitutionIdentification6PSPPayeurOuPaye"
-                    CdtrAgt:
-                      $ref: "#/components/schemas/BranchAndFinancialInstitutionIdentification6PSPPayeurOuPaye"
-                    Cdtr:
-                      $ref: "#/components/schemas/PartyIdentification135ClientPayeurOuPaye"
-                    CdtrAcct:
-                      $ref: "#/components/schemas/CashAccountCreditor"
+                        - PmtId
+                        - PmtTpInf  
+                        - IntrBkSttlmAmt
+                        - AccptncDtTm  
+                        - ChrgBr
+                        - Dbtr
+                        - DbtrAcct
+                        - DbtrAgt
+                        - CdtrAgt
+                        - Cdtr
+                        - CdtrAcct
                   required:
-                    - PmtId
-                    - PmtTpInf  
-                    - IntrBkSttlmAmt
-                    - AccptncDtTm  
-                    - ChrgBr
-                    - Dbtr
-                    - DbtrAcct
-                    - DbtrAgt
-                    - CdtrAgt
-                    - Cdtr
-                    - CdtrAcct
+                    - GrpHdr
+                    - CdtTrfTxInf
               required:
-                - GrpHdr
-                - CdtTrfTxInf
-          required:
-            - FIToFICstmrCdtTrf
-      xml:
-        namespace: "urn:bceao:pi:xsd:payload.1.0.0"
-        name: RequestPayload
-      required:
-        - AppHdr
-        - Document  
-    
+                - FIToFICstmrCdtTrf
+
     # pacs.0002
     MessagePacs002:
       type: object
+      required:
+        - RequestPayload
       properties:
-        # BAH Header 
-        AppHdr:
-          $ref: "#/components/schemas/MessageAppHeader"
-        # Document
-        Document:
+        RequestPayload:
           type: object
+          required:
+            - AppHdr
+            - Document  
           properties:
-            FIToFIPmtStsRpt:
+            '@xmlns':       # Namespace declaration
+              type: string
+              enum:
+                - urn:bceao:pi:xsd:payload.1.0.0
+            # BAH Header 
+            AppHdr:
+              $ref: "#/components/schemas/MessageAppHeader"
+            # Document
+            Document:
               type: object
               properties:
-                # Group Header
-                GrpHdr:
+                '@xmlns':       # Namespace declaration
+                  type: string
+                  enum:
+                    - urn:iso:std:iso:20022:tech:xsd:pacs.002.001.12
+                FIToFIPmtStsRpt:
                   type: object
                   properties:
-                    MsgId:
-                      type: string
-                    CreDtTm:
-                      type: string
-                      format: date-time
+                    # Group Header
+                    GrpHdr:
+                      type: object
+                      properties:
+                        MsgId:
+                          type: string
+                        CreDtTm:
+                          type: string
+                          format: date-time
+                      required:
+                        - MsgId
+                        - CreDtTm
+                    # CreditTransferTransaction
+                    TxInfAndSts:
+                      type: object
+                      properties:
+                        OrgnlGrpInf:
+                          type: object
+                          properties:
+                            OrgnlMsgId:
+                              type: string
+                            OrgnlMsgNmId:
+                              type: string
+                            OrgnlCreDtTm:
+                              type: string
+                          required:
+                            - EndToEndId
+                        OrgnlEndToEndId:
+                          type: string
+                        TxSts:
+                          type: string
+                          enum:
+                            - ACSP
+                            - RJCT
+                        Rsn:
+                          type: object
+                          properties:
+                            Cd:
+                              $ref: "#/components/schemas/Pacs002RejectRsnCd"
+                          required:
+                            - Cd
+                        AddtlInf:
+                          $ref: '#/components/schemas/Max105Text'
+                      anyOf:
+                        - required:
+                          - OrgnlGrpInf
+                          - OrgnlEndToEndId  
+                          - TxSts
+                        - required:
+                          - OrgnlGrpInf
+                          - OrgnlEndToEndId  
+                          - TxSts
+                          - Rsn
+                          - AddtlInf
+                      
                   required:
-                    - MsgId
-                    - CreDtTm
-                # CreditTransferTransaction
-                TxInfAndSts:
-                  type: object
-                  properties:
-                    OrgnlGrpInf:
-                      type: object
-                      properties:
-                        OrgnlMsgId:
-                          type: string
-                        OrgnlMsgNmId:
-                          type: string
-                        OrgnlCreDtTm:
-                          type: string
-                      required:
-                        - EndToEndId
-                    OrgnlEndToEndId:
-                      type: string
-                    TxSts:
-                      type: string
-                      enum:
-                        - ACSP
-                        - RJCT
-                    Rsn:
-                      type: object
-                      properties:
-                        Cd:
-                          $ref: "#/components/schemas/Pacs002RejectRsnCd"
-                      required:
-                        - Cd
-                    AddtlInf:
-                      $ref: '#/components/schemas/Max105Text'
-                  anyOf:
-                    - required:
-                      - OrgnlGrpInf
-                      - OrgnlEndToEndId  
-                      - TxSts
-                    - required:
-                      - OrgnlGrpInf
-                      - OrgnlEndToEndId  
-                      - TxSts
-                      - Rsn
-                      - AddtlInf
-                  
+                    - GrpHdr
+                    - TxInfAndSts
               required:
-                - GrpHdr
-                - TxInfAndSts
-          required:
-            - FIToFIPmtStsRpt
-      xml:
-        namespace: "urn:bceao:pi:xsd:payload.1.0.0"
-        name: RequestPayload
-      required:
-        - AppHdr
-        - Document  
+                - FIToFIPmtStsRpt
 
      # pacs.0002
     MessagePacs028:
       type: object
+      required:
+        - RequestPayload
       properties:
-        # BAH Header 
-        AppHdr:
-          $ref: "#/components/schemas/MessageAppHeader"
-        # Document
-        Document:
+        RequestPayload:
           type: object
+          required:
+            - AppHdr
+            - Document  
           properties:
-            FIToFIPmtStsReq:
+            '@xmlns':       # Namespace declaration
+              type: string
+              enum:
+                - urn:bceao:pi:xsd:payload.1.0.0
+            # BAH Header 
+            AppHdr:
+              $ref: "#/components/schemas/MessageAppHeader"
+            # Document
+            Document:
               type: object
               properties:
-                # Group Header
-                GrpHdr:
+                '@xmlns':       # Namespace declaration
+                  type: string
+                  enum:
+                    - urn:iso:std:iso:20022:tech:xsd:pacs.028.001.05
+                FIToFIPmtStsReq:
                   type: object
                   properties:
-                    MsgId:
-                      type: string
-                    CreDtTm:
-                      type: string
-                      format: date-time
+                    # Group Header
+                    GrpHdr:
+                      type: object
+                      properties:
+                        MsgId:
+                          type: string
+                        CreDtTm:
+                          type: string
+                          format: date-time
+                      required:
+                        - MsgId
+                        - CreDtTm
+                    # CreditTransferTransaction
+                    TxInf:
+                      type: object
+                      properties:
+                        OrgnlEndToEndId:
+                          type: string
+                      required:
+                        - OrgnlEndToEndId
                   required:
-                    - MsgId
-                    - CreDtTm
-                # CreditTransferTransaction
-                TxInf:
-                  type: object
-                  properties:
-                    OrgnlEndToEndId:
-                      type: string
-                  required:
-                    - OrgnlEndToEndId
+                    - GrpHdr
+                    - TxInf
               required:
-                - GrpHdr
-                - TxInf
-          required:
-            - FIToFIPmtStsReq
-      xml:
-        namespace: "urn:bceao:pi:xsd:payload.1.0.0"
-        name: RequestPayload
-      required:
-        - AppHdr
-        - Document  
+                - FIToFIPmtStsReq
 
     # acmt.023
     MessageAcmt023:
       type: object
+      required:
+        - RequestPayload
       properties:
-        # BAH Header 
-        AppHdr:
-          $ref: "#/components/schemas/MessageAppHeader"
-        # Document
-        Document:
+        RequestPayload:
           type: object
+          required:
+            - AppHdr
+            - Document  
           properties:
-            IdVrfctnReq:
+            '@xmlns':       # Namespace declaration
+              type: string
+              enum:
+                - urn:bceao:pi:xsd:payload.1.0.0
+            # BAH Header 
+            AppHdr:
+              $ref: "#/components/schemas/MessageAppHeader"
+            # Document
+            Document:
               type: object
               properties:
-                Assgnmt:
+                '@xmlns':       # Namespace declaration
+                  type: string
+                  enum:
+                    - urn:iso:std:iso:20022:tech:xsd:acmt.023.001.03
+                IdVrfctnReq:
                   type: object
                   properties:
-                    MsgId:
-                      type: string
-                    CreDtTm:
-                      type: string
-                      format: date-time
-                    # information assigner (payeur)
-                    Assgnr:
+                    Assgnmt:
                       type: object
                       properties:
-                        Agt:
+                        MsgId:
+                          type: string
+                        CreDtTm:
+                          type: string
+                          format: date-time
+                        # information assigner (payeur)
+                        Assgnr:
                           type: object
                           properties:
-                            FinInstnId:
-                              $ref: "#/components/schemas/FinancialInstitutionIdentification18NmOthr"
+                            Agt:
+                              type: object
+                              properties:
+                                FinInstnId:
+                                  $ref: "#/components/schemas/FinancialInstitutionIdentification18NmOthr"
+                              required:
+                                - FinInstnId
                           required:
-                            - FinInstnId
+                            - Agt 
+                        # information assigne (paye)
+                        Assgne:
+                          type: object
+                          properties:
+                            Agt:
+                              type: object
+                              properties:
+                                FinInstnId:
+                                  $ref: "#/components/schemas/FinancialInstitutionIdentification18NmOthr"
+                              required:
+                                - FinInstnId
+                          required:
+                            - Agt 
                       required:
-                        - Agt 
-                    # information assigne (paye)
-                    Assgne:
+                        - MsgId
+                        - CreDtTm
+                        - Assgnr
+                        - Assgne
+                    Vrfctn:
                       type: object
-                      properties:
-                        Agt:
+                      properties: 
+                        Id:
+                          type: string
+                        PtyAndAcctId:
                           type: object
                           properties:
-                            FinInstnId:
-                              $ref: "#/components/schemas/FinancialInstitutionIdentification18NmOthr"
+                            Acct:
+                              type: object
+                              properties:
+                                Id:
+                                  $ref: '#/components/schemas/AccountIdentification4Choice'
+                              required:
+                                - Id
                           required:
-                            - FinInstnId
+                            - Acct
                       required:
-                        - Agt 
+                        - Id
+                        - PtyAndAcctId
                   required:
-                    - MsgId
-                    - CreDtTm
-                    - Assgnr
-                    - Assgne
-                Vrfctn:
-                  type: object
-                  properties: 
-                    Id:
-                      type: string
-                    PtyAndAcctId:
-                      type: object
-                      properties:
-                        Pty:
-                          $ref: '#/components/schemas/PartyIdentification135ClientPayeurOuPaye'
-                        Acct:
-                          type: object
-                          properties:
-                            Id:
-                              $ref: '#/components/schemas/AccountIdentification4Choice'
-                          required:
-                            - Id
-                      required:
-                        - Pty
-                        - Acct
-                  required:
-                    - Id
-                    - PtyAndAcctId
+                    - Assgnmt
+                    - Vrfctn
               required:
-                - Assgnmt
-                - Vrfctn
-          required:
-            - IdVrfctnReq    
-      xml:
-        namespace: "urn:bceao:pi:xsd:payload.1.0.0"
-        name: RequestPayload
-      required:
-        - AppHdr
-        - Document  
+                - IdVrfctnReq    
     
     # acmt.024
     MessageAcmt024:
       type: object
+      required:
+        - RequestPayload
       properties:
-        # BAH Header 
-        AppHdr:
-          $ref: "#/components/schemas/MessageAppHeader"
-        # Document
-        Document:
+        RequestPayload:
           type: object
+          required:
+            - AppHdr
+            - Document  
           properties:
-            IdVrfctnRpt:
+            '@xmlns':       # Namespace declaration
+              type: string
+              enum:
+                - urn:bceao:pi:xsd:payload.1.0.0
+            # BAH Header 
+            AppHdr:
+              $ref: "#/components/schemas/MessageAppHeader"
+            # Document
+            Document:
               type: object
               properties:
-                Assgnmt:
+                '@xmlns':       # Namespace declaration
+                  type: string
+                  enum:
+                    - urn:iso:std:iso:20022:tech:xsd:acmt.024.001.03
+                IdVrfctnRpt:
                   type: object
                   properties:
-                    MsgId:
-                      type: string
-                    CreDtTm:
-                      type: string
-                      format: date-time
-                    # information assigner (payeur)
-                    Assgnr:
+                    Assgnmt:
                       type: object
                       properties:
-                        Agt:
-                          type: object
-                          properties:
-                            FinInstnId:
-                              $ref: "#/components/schemas/FinancialInstitutionIdentification18NmOthr"
-                          required:
-                            - FinInstnId
-                      required:
-                        - Agt 
-                    # information assigne (paye)
-                    Assgne:
-                      type: object
-                      properties:
-                        Agt:
-                          type: object
-                          properties:
-                            FinInstnId:
-                              $ref: "#/components/schemas/FinancialInstitutionIdentification18NmOthr"
-                          required:
-                            - FinInstnId
-                      required:
-                        - Agt 
-                  required:
-                    - MsgId
-                    - CreDtTm
-                    - Assgnr
-                    - Assgne
-                OrgnlAssgnmt:
-                  type: object
-                  properties:
-                    MsgId:
-                      type: string
-                Rpt:
-                  type: object
-                  properties:
-                    OrgnlId: 
-                      type: string
-                    Vrfctn: 
-                      type: boolean
-                    Rsn:
-                      type: object
-                      properties: 
-                        Cd: 
+                        MsgId:
                           type: string
-                    UpdtdPtyAndAcctId:
-                      type: object
-                      properties: 
-                        Pty:
-                          $ref: '#/components/schemas/PartyIdentification135ClientPayeurOuPaye'
-                        Acct:
-                          $ref: '#/components/schemas/CashAccount40'
-                        Agt: 
+                        CreDtTm:
+                          type: string
+                          format: date-time
+                        # information assigner (payeur)
+                        Assgnr:
                           type: object
                           properties:
-                            FinInstnId:
-                              $ref: "#/components/schemas/FinancialInstitutionIdentification18NmOthr"
-                            BrnchId: 
+                            Agt:
                               type: object
-                              properties: 
-                                Id: 
-                                  type: string
+                              properties:
+                                FinInstnId:
+                                  $ref: "#/components/schemas/FinancialInstitutionIdentification18NmOthr"
+                              required:
+                                - FinInstnId
                           required:
-                            - FinInstnId
-                            - BrnchId
-                  anyOf:
-                    - required:
-                      - OrgnlId
-                      - Vrfctn
-                      - Rsn
-                    - required:
-                      - OrgnlId
-                      - Vrfctn
-                      - UpdtdPtyAndAcctId
+                            - Agt 
+                        # information assigne (paye)
+                        Assgne:
+                          type: object
+                          properties:
+                            Agt:
+                              type: object
+                              properties:
+                                FinInstnId:
+                                  $ref: "#/components/schemas/FinancialInstitutionIdentification18NmOthr"
+                              required:
+                                - FinInstnId
+                          required:
+                            - Agt 
+                      required:
+                        - MsgId
+                        - CreDtTm
+                        - Assgnr
+                        - Assgne
+                    OrgnlAssgnmt:
+                      type: object
+                      properties:
+                        MsgId:
+                          type: string
+                    Rpt:
+                      type: object
+                      properties:
+                        OrgnlId: 
+                          type: string
+                        Vrfctn: 
+                          type: boolean
+                        Rsn:
+                          type: object
+                          properties: 
+                            Cd: 
+                              type: string
+                        UpdtdPtyAndAcctId:
+                          type: object
+                          properties: 
+                            Pty:
+                              $ref: '#/components/schemas/PartyIdentification135ClientPayeurOuPaye'
+                            Acct:
+                              $ref: '#/components/schemas/CashAccount40'
+                            Agt: 
+                              type: object
+                              properties:
+                                FinInstnId:
+                                  $ref: "#/components/schemas/FinancialInstitutionIdentification18NmOthr"
+                                BrnchId: 
+                                  type: object
+                                  properties: 
+                                    Id: 
+                                      type: string
+                              required:
+                                - FinInstnId
+                                - BrnchId
+                      anyOf:
+                        - required:
+                          - OrgnlId
+                          - Vrfctn
+                          - Rsn
+                        - required:
+                          - OrgnlId
+                          - Vrfctn
+                          - UpdtdPtyAndAcctId
+                  required:
+                    - Assgnmt
+                    - OrgnlAssgnmt
+                    - Rpt
               required:
-                - Assgnmt
-                - OrgnlAssgnmt
-                - Rpt
-          required:
-            - IdVrfctnRpt    
-      xml:
-        namespace: "urn:bceao:pi:xsd:payload.1.0.0"
-        name: RequestPayload
-      required:
-        - AppHdr
-        - Document  
+                - IdVrfctnRpt    
+
 
     # acmt.024 UpdtdPtyAndAcctId Acct
     CashAccount40:
@@ -929,6 +1811,10 @@ components:
     MessageAppHeader:
       type: object
       properties:
+        '@xmlns':       # Namespace declaration
+          type: string
+          enum:
+            - urn:iso:std:iso:20022:tech:xsd:head.001.001.03
         Fr:
           $ref: "#/components/schemas/Party44ChoiceFr"
         To:
@@ -1128,8 +2014,6 @@ components:
         - FR01: Retourné à la suite d'une fraude.
         - UPAY: Le paiement n'est pas justifié.
 
-      
-
   # *********** RESPONSES
   responses:
     FormatInvalide:
@@ -1148,7 +2032,6 @@ components:
             exemple:
               $ref: "#/components/examples/Problem7807ExempleBadRequest"
         
-
   # *********** EXEMPLES
   examples:
     # Probleme 7807
@@ -1159,160 +2042,6 @@ components:
         title: "Bad Request"
         status: 400
         detail: "Format du message invalide"
-
-    # Virement P2P
-    Pacs008ExempleVirement:
-      summary: "Exemple de pacs.008 envoyé pour un virement"
-      value:
-        AppHdr:
-          Fr:
-            FIId:
-              FinInstnId:
-                Nm: "PSP Banque SN 001"
-                Othr:
-                  Id: "SNB001"
-          To:
-            FIId:
-              FinInstnId:
-                Nm: "PI"
-                Othr:
-                  Id: "PIUMOA"
-          BizMsgIdr: "MSNB001nXAdyOl7iIZSKdzEGZfWcWBaV6a7"
-          MsgDefIdr: "pacs.008.001.10"
-          CreDt: "2023-02-21T15:30:01.250Z"
-        Document:
-          FIToFICstmrCdtTrf:
-            GrpHdr:
-              MsgId: "MSNB001nXydyOl7iIZSKdzEGZfWcWBaB6bY"
-              CreDtTm: "2023-02-21T15:35:54.362Z"
-              NbOfTxs: 1
-              SttlmInf:
-                SttlmMtd: "CLRG"
-            CdtTrfTxInf:
-              PmtId:
-                EndToEndId: "ESNB00120230221153554KXvozkpNvhUk9e"
-              PmtTpInf:
-                LclInstrm:
-                  Prtry: 333
-                CtgyPurp:
-                  Prtry: "VP2P"
-              IntrBkSttlmAmt: 
-                value: 100000
-                Ccy: XOF
-              AccptncDtTm: "2023-02-21T15:35:54.199Z"
-              ChrgBr: "SLEV"
-              Dbtr:
-                Nm: "Khady DIOP"
-                PostalAddress:
-                  TownName: Dakar
-                CtryOfRes: "SN"
-              DbtrAcct:
-                Id:
-                  IBAN: "SN0110333333000003122583"
-                Tp:
-                  Cd: "CACC"
-                Ccy: "XOF"
-              DbtrAgt:
-                FinInstnId:
-                  Nm: "Participant payeur"
-                  Othr:
-                    Id: "SNB001"
-                BrnchId:
-                  Id: 3333
-              CdtrAgt:
-                FinInstnId:
-                  Nm: "Participant paye"
-                  Othr:
-                    Id: "SNB234"
-                BrnchId:
-                  Id: 2222
-              Cdtr:
-                Nm: "Mariam TRAORE"
-                CtryOfRes: "SN"
-              CdtrAcct:
-                Id:
-                  IBAN: "SN0110222223000003122583"
-                Tp:
-                  Cd: "SVGS"
-                Ccy: "XOF"
-                Prxy:
-                  Id: 221778520236
-    
-    # Paiement Marchand
-    Pacs008ExemplePaiement:
-      summary: "Exemple de pacs.008 envoyé pour un paiement"
-      value:
-        AppHdr:
-          Fr:
-            FIId:
-              FinInstnId:
-                Nm: "PSP Banque SN 001"
-                Othr:
-                  Id: "SNB001"
-          To:
-            FIId:
-              FinInstnId:
-                Nm: "PI"
-                Othr:
-                  Id: "PIUMOA"
-          BizMsgIdr: "MSNB001nXAdyOl7iIZSKdzEGZfWcWBaV6a7"
-          MsgDefIdr: "pacs.008.001.10"
-          CreDt: "2023-02-21T15:30:01.250Z"
-        Document:
-          FIToFICstmrCdtTrf:
-            GrpHdr:
-              MsgId: MSNB001nXydyOl7iIZSKdzEGZfWcWBaB6bY
-              CreDtTm: '2023-02-21T15:35:54.362Z'
-              NbOfTxs: 1
-              SttlmInf:
-                SttlmMtd: CLRG
-            CdtTrfTxInf:
-              PmtId:
-                EndToEndId: ESNB00120230221153554KXvozkpNvhUk9e
-              PmtTpInf:
-                LclInstrm:
-                  Prtry: 333
-                CtgyPurp:
-                  Prtry: VP2P
-              IntrBkSttlmAmt: 
-                Ccy: 100000
-                value: value
-              AccptncDtTm: '2023-02-21T15:35:54.199Z'
-              ChrgBr: SLEV
-              Dbtr:
-                Nm: Khady DIOP
-                CtryOfRes: SN
-              DbtrAcct:
-                Id:
-                  IBAN: SN0110333333000003122583
-                Tp:
-                  Cd: CACC
-                Ccy: XOF
-              DbtrAgt:
-                FinInstnId:
-                  Nm: Participant payeur
-                  Othr:
-                    Id: SNB001
-                BrnchId:
-                  Id: 3333
-              CdtrAgt:
-                FinInstnId:
-                  Nm: Participant paye
-                  Othr:
-                    Id: SNB234
-                BrnchId:
-                  Id: 2222
-              Cdtr:
-                Nm: Mariam TRAORE
-                CtryOfRes: SN
-              CdtrAcct:
-                Id:
-                  IBAN: SN0110222223000003122583
-                Tp:
-                  Cd: SVGS
-                Ccy: XOF
-                Prxy:
-                  Id: 221778520236
 
     # Virement P2P
     Pacs002ExempleVirementReponsePositive:
