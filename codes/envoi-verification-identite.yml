@@ -1,0 +1,65 @@
+- lang: java
+  label: Java
+  source: |-
+    // Exemple de code Java pour envoyer une demande de verification d'identité
+
+    import java.io.IOException;
+    import java.net.URI;
+    import java.net.http.HttpClient;
+    import java.net.http.HttpRequest;
+    import java.net.http.HttpResponse;
+
+    public class Test {
+        public static void main(String[] args) throws IOException, InterruptedException {
+            
+            String url = "https://api.test.pi-bceao.com/spi/v1/verifications-identites";
+            String requestBody = "<RequestPayload xmlns=\"urn:bceao:pi:xsd:payload.1.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd\"> ... </RequestPayload>";
+
+            HttpClient httpClient = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Content-Type", "application/xml")
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.statusCode());
+            System.out.println(response.body());
+        }
+    }
+- lang: javascript
+  label: Node.js
+  source: |-
+    // Exemple de code Node.js pour envoyer une demande de verification d'identité
+    
+    const axios = require('axios');
+
+    const url = 'https://api.test.pi-bceao.com/spi/v1/verifications-identites';
+    const requestBody = "<RequestPayload xmlns=\"urn:bceao:pi:xsd:payload.1.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd\"> ... </RequestPayload>";
+
+    axios.post(url, requestBody, {
+        headers: {
+            'Content-Type': 'application/xml'
+        }
+    })
+        .then(response => {
+            console.log(response.status);
+            console.log(response.data);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+- lang: python
+  label: Python
+  source: |-
+    # Exemple de code Python pour envoyer une demande de verification d'identité
+    
+    import requests
+
+    url = 'https://api.test.pi-bceao.com/spi/v1/verifications-identites'
+    request_body = "<RequestPayload xmlns=\"urn:bceao:pi:xsd:payload.1.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd\"> ... </RequestPayload>"
+    headers = {'Content-Type': 'application/xml'}
+
+    response = requests.post(url, data=request_body, headers=headers)
+    print(response.status_code)
+    print(response.text)

@@ -2,3 +2,4 @@
 .DS_Store
 /snyk_report.html
 /snyk_report.json
+node_modules
