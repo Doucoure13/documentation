@@ -113,7 +113,7 @@ info:
     * Le serveur valide/vérifie le certificat reçu. Le serveur vérifie le certificat via l'autorité de certification pour les certificats signés par une CA.
     
     Après l'achèvement du processus de poignée de main, le client et le serveur communiquent et transfèrent des données chiffrées avec les clés secrètes partagées entre les deux lors de la poignée de main.
-
+    <img src="./images/cinematique-mtls.png" />
     ## Signature numérique
     Afin de garantir l'`intégrité` et la `non-répudiation` des transactions, tous les messages transmis doivent être signés par le participant émetteur. 
     Quelle que soit l'opération effectuée, la réponse au participant est toujours signée par PI.
