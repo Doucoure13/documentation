@@ -16,9 +16,9 @@
     import java.security.UnrecoverableKeyException;
     import java.security.cert.CertificateException;
 
-    import javax.net.ssl.KeyManagerFactory;
     import javax.net.ssl.SSLContext;
-    import javax.net.ssl.TrustManagerFactory;
+
+    import org.apache.http.ssl.SSLContexts;
 
     import java.net.http.HttpResponse;
 
@@ -50,26 +50,17 @@
 
         }
 
-        public static SSLContext getSSLContext(String keystorePath, String keystorePassword) throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException, UnrecoverableKeyException, KeyManagementException{
+        public static SSLContext getSSLContext(String keystorePath, String keystorePassword) throws KeyManagementException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, CertificateException, IOException {
             // Chargement keystore
             KeyStore keyStore = KeyStore.getInstance("PKCS12");
             try (FileInputStream inputStream = new FileInputStream(keystorePath)) {
                 keyStore.load(inputStream, keystorePassword.toCharArray());
             }
 
-            // Création key manager
-            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-            keyManagerFactory.init(keyStore, keystorePassword.toCharArray());
-
-            // Création trust manager
-            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-            trustManagerFactory.init(keyStore);
-
             // Création SSL context
-            SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
-            sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
-
-            return sslContext;
+            return SSLContexts.custom()
+                    .loadKeyMaterial(keyStore, keystorePassword.toCharArray())
+                    .build();
         }
     }
 
@@ -80,13 +71,21 @@
     
     const https = require('https');
     const fs = require('fs');
+    const tls = require('tls');
 
-    const url = 'https://api.test.pi-bceao.com/spi/v1/transferts/statuts';
+    const url = 'api.test.pi-bceao.com/spi/v1';
+    const endpoint= '/transferts/statuts';
     const requestBody = "<RequestPayload xmlns=\"urn:bceao:pi:xsd:payload.1.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd\"> ... </RequestPayload>";
 
-    executeHttpsPostRequest(url,requestBody,null);
+    executeHttpsPostRequest(url, endpoint, requestBody, null)
+        .then((result) => {
+            console.log(result)
+        })
+        .catch((error) => {
+            console.error(error)
+        });
 
-    function executeHttpsPostRequest(url, postData, options) {
+    function executeHttpsPostRequest(url,endpoint, postData, options) {
         /**
         * Cette fonction exécute une requête HTTPS POST avec un contexte SSL(MTLS)
         * 
@@ -102,7 +101,7 @@
                 const keystore = fs.readFileSync('path/to/certificate.keystore.pkcs12');
 
                 // Configuration les options du contexte SSL
-                const sslContext = require('tls').createSecureContext({
+                const sslContext = tls.createSecureContext({
                     pfx: keystore,
                     passphrase: 'keystore_password'
                 });
@@ -111,7 +110,8 @@
                 const httpsOptions = {
                     hostname: url,
                     port: 443,
-                    path: '/',
+                    protocol: 'https:',
+                    path: endpoint,
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/xml',
@@ -155,33 +155,54 @@
   source: |-
     # Exemple de code Python pour envoyer la recherche de statut d'une demande de virement
     
-    import requests
+    import http.client
     import ssl
 
-    def execute_https_post_request(url, data, cert_file, cert_password, headers):
+    def execute_https_post_request(url, endpoint, post_data, cert_file, key_file, headers):
         try:
-            # Chargement du certificat
-            context = ssl.create_default_context(purpose=ssl.Purpose.CLIENT_AUTH)
-            context.load_pkcs12(cert_file, cert_password)
+            # Création d'un contexte SSL personnalisé
+            context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
 
-            # Envoi de la requête
-            response = requests.post(url, data=data, cert=context, headers=headers)
+            # Chargement du certificat client et de la clé privée
+            context.load_cert_chain(cert_file, key_file)
 
-            # Vérification de la statut dans la reponse
-            response.raise_for_status()
+            # Connexion au serveur en utilisant le contexte SSL personnalisé
+            conn = http.client.HTTPSConnection(url, context=context)
 
-            return response
+            # Envoi de la requête POST avec MTLS
+            conn.request('POST', endpoint, body=post_data, headers=headers)
 
-    # Appel endpoint SPI
+            # Récupération de la réponse
+            return conn.getresponse().read().decode()
+            
+        except Exception as e:
+            print("Erreur survenue: ",e)
+            return None
+        finally:
+            # Fermeture de la connexion
+            conn.close()
 
-    url = 'https://api.test.pi-bceao.com/spi/v1/transferts/statuts'
-    request_body = "<RequestPayload xmlns=\"urn:bceao:pi:xsd:payload.1.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd\"> ... </RequestPayload>"
-    cert_file = "/path/to/certificate.pfx"
-    cert_password = "password"
-    headers = {'Content-Type': 'application/xml'}
+    # Chemin vers le fichier PEM contenant le certificat client
+    cert_file = './resources/mtls/SNB001.pem'
 
-    response = execute_https_post_request(url, request_body, cert_file, cert_password, headers)
+    # Chemin vers le fichier PEM contenant la clé privée du client
+    key_file = './resources/mtls/private_key.pem'
 
-    print(response.status_code)
-    print(response.text)
+    # URL de l'endpoint
+    url = 'pi.api.pocs-bceao.com'
+
+    # La resource demandée
+    endpoint = '/transferts/statuts'
+
+    # Les entêtes
+    headers = {'Content-type': 'application/xml'}
+
+    # Données à envoyer dans la requête POST
+    data = '<RequestPayload xmlns=\"urn:bceao:pi:xsd:payload.1.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd\"> ... </RequestPayload>'
+
+    # Execution de la requête
+    result = execute_https_post_request(url,endpoint, data, cert_file, key_file, headers)
+
+    # Affichage du resultat de la requête
+    print(result)
     
