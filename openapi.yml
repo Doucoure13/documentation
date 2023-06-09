@@ -106,14 +106,189 @@ info:
     Les étapes générales suivantes décrivent comment une connexion est établie et comment les données sont transférées entre un client et un serveur dans le cas de mTLS :
 
     * Le client demande une ressource protégée via le protocole HTTPS et le processus de poignée de main SSL/TLS commence.
-    * Le serveur renvoie son certificat public au client ainsi qu'un "hello" du serveur.
-    * Le client valide/vérifie le certificat reçu. Le client vérifie le certificat via l'autorité de certification (CA) pour les certificats signés par une CA.
+    * Le serveur renvoie son certificat public au client.
+    * Le client vérifie/valide le certificat reçu. Le client vérifie le certificat via l'autorité de certification (CA) pour les certificats signés par une CA.
     * Si le certificat du serveur est validé avec succès, le serveur demande le certificat du client.
     * Le client fournit son certificat public au serveur.
-    * Le serveur valide/vérifie le certificat reçu. Le serveur vérifie le certificat via l'autorité de certification pour les certificats signés par une CA.
+    * Le serveur vérifie/valide le certificat reçu. Le serveur vérifie le certificat via l'autorité de certification pour les certificats signés par une CA.
     
     Après l'achèvement du processus de poignée de main, le client et le serveur communiquent et transfèrent des données chiffrées avec les clés secrètes partagées entre les deux lors de la poignée de main.
     <img src="./images/cinematique-mtls2.png" />
+
+    `Intégration du MTLS à une réquête`
+
+    __Java__
+    ```java
+    import java.io.FileInputStream;
+    import java.io.IOException;
+    import java.net.URI;
+    import java.net.URISyntaxException;
+    import java.net.http.HttpClient;
+    import java.net.http.HttpRequest;
+    import java.net.http.HttpResponse.BodyHandlers;
+    import java.security.KeyManagementException;
+    import java.security.KeyStore;
+    import java.security.KeyStoreException;
+    import java.security.NoSuchAlgorithmException;
+    import java.security.UnrecoverableKeyException;
+    import java.security.cert.CertificateException;
+
+    import javax.net.ssl.KeyManagerFactory;
+    import javax.net.ssl.SSLContext;
+    import javax.net.ssl.TrustManagerFactory;
+
+    import java.net.http.HttpResponse;
+
+    public class Test {
+
+        public static void executeHttpsPostRequest(String url, String requestBody, String keystorePath,String keystorePassword) throws KeyStoreException, NoSuchAlgorithmException, IOException, InterruptedException, URISyntaxException, UnrecoverableKeyException, KeyManagementException, CertificateException {
+            // Chargement keystore
+            KeyStore keyStore = KeyStore.getInstance("PKCS12");
+            try (FileInputStream inputStream = new FileInputStream(keystorePath)) {
+                keyStore.load(inputStream, keystorePassword.toCharArray());
+            }
+
+            // Création key manager
+            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            keyManagerFactory.init(keyStore, keystorePassword.toCharArray());
+
+            // Création trust manager
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory
+                    .getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory.init(keyStore);
+
+            // Création SSL context
+            SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+            sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
+
+            HttpClient client = HttpClient.newBuilder()//
+                    .sslContext(sslContext) //
+                    .version(HttpClient.Version.HTTP_2)
+                    .build();
+
+            // Création de la requête POST
+            HttpRequest postrequest = HttpRequest.newBuilder()
+                    .uri(new URI(url))
+                    .headers("Content-Type", "application/xml")
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+            // Envoi de la requête
+            HttpResponse<String> response = client.send(postrequest, BodyHandlers.ofString());
+            System.out.println(response.statusCode());
+            System.out.println(response.body());
+        }
+
+    }
+    ````
+
+    __Node.js__
+    ```javascript
+    const https = require('https');
+    const fs = require('fs');
+
+    function executeHttpsPostRequest(url, postData, options) {
+        /**
+        * Cette fonction exécute une requête HTTPS POST avec un contexte SSL(MTLS)
+        * 
+        * @param {string} url - L'URL à laquelle la demande doit être envoyée.
+        * @param {string} postData - Les données à envoyer dans le corps de la requête.
+        * @param {object} options - Les options à utiliser pour la requête.
+        * 
+        * @returns {Promise} - Une promise qui se résout avec les données de la réponse ou qui se rejette avec une erreur.
+        */
+        return new Promise((resolve, reject) => {
+            try {
+                // Chargement du keystore
+                const keystore = fs.readFileSync('path/to/certificate.keystore.pkcs12');
+
+                // Configuration les options du contexte SSL
+                const sslContext = require('tls').createSecureContext({
+                    pfx: keystore,
+                    passphrase: 'keystore_password'
+                });
+
+                // Configuration des options de la requête HTTPS
+                const httpsOptions = {
+                    hostname: url,
+                    port: 443,
+                    path: '/',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/xml',
+                        'Content-Length': Buffer.byteLength(postData),
+                    },
+                    cert: keystore,
+                    key: keystore,
+                    passphrase: 'keystore_password',
+                    secureContext: sslContext,
+                    rejectUnauthorized: true,
+                    requestCert: true,
+                    agent: false
+                };
+
+                // Envoi de la requête HTTPS
+                const req = https.request(httpsOptions, (res) => {
+                    let data = '';
+                    res.on('data', (chunk) => {
+                        data += chunk;
+                    });
+                    res.on('end', () => {
+                        resolve(data);
+                    });
+                });
+
+                // Traitement des erreurs
+                req.on('error', (error) => {
+                    reject(error);
+                });
+
+                // Envoi des données de la requête
+                req.write(postData);
+                req.end();
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+    ````
+
+    __Python__
+    ```python
+    import requests
+    import ssl
+
+    def execute_https_post_request(url, data, keystore_path, keystore_password):
+        """
+        Cette fonction envoie une requête HTTPS POST à une URL spécifiée avec les données et le contexte SSL indiqués.
+        
+        Parameters:
+        url (str): L'URL à laquelle envoyer la requête
+        data (dict): Les données à envoyer avec la requête
+        keystore_path (str): Le chemin vers le fichier keystore
+        keystore_password (str): Le mot de passe pour le fichier keystore
+        
+        Returns:
+        requests.Response: L'objet de réponse du serveur
+        """
+        try:
+            # Chargement du keystore
+            context = ssl.create_default_context(purpose=ssl.Purpose.CLIENT_AUTH)
+            context.load_pkcs12(keystore_path, keystore_password)
+            
+            # Envoi de la requête
+            response = requests.post(url, data=data, cert=context)
+            
+            # Vérification du code d'état de la réponse
+            response.raise_for_status()
+            
+            return response
+        except Exception as e:
+            # Affichage des erreurs
+            print(f"Error: {e}")
+            return None
+    ````
+    
     ## Signature numérique
     Afin de garantir l'`intégrité` et la `non-répudiation` des transactions, tous les messages transmis doivent être signés par le participant émetteur. 
     Quelle que soit l'opération effectuée, la réponse au participant est toujours signée par PI.
@@ -442,7 +617,8 @@ paths:
           $ref: "#/components/responses/FormatInvalide"
         '401':
           description: Autorisations manquantes
-
+      security:
+        - mutual_tls: []
       x-code-samples:
         $ref: ./codes/envoi-transfert.yml
 
@@ -476,7 +652,8 @@ paths:
           $ref: "#/components/responses/FormatInvalide"
         '401':
           description: Autorisations manquantes
-
+      security:
+        - mutual_tls: []
       x-code-samples:
         $ref: ./codes/reponse-transfert.yml
 
@@ -504,7 +681,8 @@ paths:
           $ref: "#/components/responses/FormatInvalide"
         '401':
           description: Autorisations manquantes
-
+      security:
+        - mutual_tls: []
       x-code-samples:
         $ref: ./codes/statut-transfert.yml
 
@@ -534,7 +712,8 @@ paths:
           $ref: "#/components/responses/FormatInvalide"
         '401':
           description: Autorisations manquantes
-
+      security:
+        - mutual_tls: []
       x-code-samples:
         $ref: ./codes/envoi-verification-identite.yml
 
@@ -566,17 +745,18 @@ paths:
           $ref: "#/components/responses/FormatInvalide"
         '401':
           description: Autorisations manquantes
-
+      security:
+        - mutual_tls: []
       x-code-samples:
         $ref: ./codes/reponse-verification-identite.yml
 
+  
 components:
   # *********** SECURITY
   securitySchemes:
-    api_key:
-      type: apiKey
-      name: x-api-key
-      in: header
+    mutual_tls:
+      type: mutualTLS
+      description: Utilisation d'une connexion sécurisée bidirectionnelle pour l'authentification des clients et le serveur.
 
   # *********** SCHEMAS
   schemas:
@@ -1748,3 +1928,4 @@ components:
               Vrfctn: false
               Rsn: 
                 Cd: AC01
+

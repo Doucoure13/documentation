@@ -3,63 +3,185 @@
   source: |-
     // Exemple de code Java pour envoyer la reponse d'une demande de transfert
 
+    import java.io.FileInputStream;
     import java.io.IOException;
     import java.net.URI;
     import java.net.http.HttpClient;
     import java.net.http.HttpRequest;
+    import java.net.http.HttpResponse.BodyHandlers;
+    import java.security.KeyManagementException;
+    import java.security.KeyStore;
+    import java.security.KeyStoreException;
+    import java.security.NoSuchAlgorithmException;
+    import java.security.UnrecoverableKeyException;
+    import java.security.cert.CertificateException;
+
+    import javax.net.ssl.KeyManagerFactory;
+    import javax.net.ssl.SSLContext;
+    import javax.net.ssl.TrustManagerFactory;
+
     import java.net.http.HttpResponse;
 
     public class Test {
-        public static void main(String[] args) throws IOException, InterruptedException {
-            
+
+        public static void main(String[] args) throws Exception {
             String url = "https://api.test.pi-bceao.com/spi/v1/transferts/rapports";
+            String keystorePath = "/path/to/keystore.p12";
+            String keystorePassword = "password";
             String requestBody = "<RequestPayload xmlns=\"urn:bceao:pi:xsd:payload.1.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd\"> ... </RequestPayload>";
 
-            HttpClient httpClient = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .header("Content-Type", "application/xml")
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .build();
+            HttpClient client = HttpClient.newBuilder()//
+                    .sslContext(getSSLContext(keystorePath, keystorePassword)) //
+                    .version(HttpClient.Version.HTTP_2)
+                    .build();
 
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            // Creer la requête POST
+            HttpRequest postrequest = HttpRequest.newBuilder()
+                    .uri(new URI(url))
+                    .headers("Content-Type", "application/xml")
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+            // Envoyer la requête
+            HttpResponse<String> response = client.send(postrequest, BodyHandlers.ofString());
             System.out.println(response.statusCode());
             System.out.println(response.body());
+
+
+        }
+
+        public static SSLContext getSSLContext(String keystorePath, String keystorePassword) throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException, UnrecoverableKeyException, KeyManagementException{
+            // Chargement keystore
+            KeyStore keyStore = KeyStore.getInstance("PKCS12");
+            try (FileInputStream inputStream = new FileInputStream(keystorePath)) {
+                keyStore.load(inputStream, keystorePassword.toCharArray());
+            }
+
+            // Création key manager
+            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            keyManagerFactory.init(keyStore, keystorePassword.toCharArray());
+
+            // Création trust manager
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory.init(keyStore);
+
+            // Création SSL context
+            SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+            sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
+
+            return sslContext;
         }
     }
+
 - lang: javascript
   label: Node.js
   source: |-
     // Exemple de code Node.js pour envoyer la reponse d'une demande de transfert
     
-    const axios = require('axios');
+    const https = require('https');
+    const fs = require('fs');
 
     const url = 'https://api.test.pi-bceao.com/spi/v1/transferts/rapports';
     const requestBody = "<RequestPayload xmlns=\"urn:bceao:pi:xsd:payload.1.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd\"> ... </RequestPayload>";
 
-    axios.post(url, requestBody, {
-        headers: {
-            'Content-Type': 'application/xml'
-        }
-    })
-        .then(response => {
-            console.log(response.status);
-            console.log(response.data);
-        })
-        .catch(error => {
-            console.error(error);
+    executeHttpsPostRequest(url,requestBody,null);
+
+    function executeHttpsPostRequest(url, postData, options) {
+        /**
+        * Cette fonction exécute une requête HTTPS POST avec un contexte SSL(MTLS)
+        * 
+        * @param {string} url - L'URL à laquelle la demande doit être envoyée.
+        * @param {string} postData - Les données à envoyer dans le corps de la requête.
+        * @param {object} options - Les options à utiliser pour la requête.
+        * 
+        * @returns {Promise} - Une promise qui se résout avec les données de la réponse ou qui se rejette avec une erreur.
+        */
+        return new Promise((resolve, reject) => {
+            try {
+                // Chargement du keystore
+                const keystore = fs.readFileSync('path/to/certificate.keystore.pkcs12');
+
+                // Configuration les options du contexte SSL
+                const sslContext = require('tls').createSecureContext({
+                    pfx: keystore,
+                    passphrase: 'keystore_password'
+                });
+
+                // Configuration des options de la requête HTTPS
+                const httpsOptions = {
+                    hostname: url,
+                    port: 443,
+                    path: '/',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/xml',
+                        'Content-Length': Buffer.byteLength(postData),
+                    },
+                    cert: keystore,
+                    key: keystore,
+                    passphrase: 'keystore_password',
+                    secureContext: sslContext,
+                    rejectUnauthorized: true,
+                    requestCert: true,
+                    agent: false
+                };
+
+                // Envoi de la requête HTTPS
+                const req = https.request(httpsOptions, (res) => {
+                    let data = '';
+                    res.on('data', (chunk) => {
+                        data += chunk;
+                    });
+                    res.on('end', () => {
+                        resolve(data);
+                    });
+                });
+
+                // Traitement des erreurs
+                req.on('error', (error) => {
+                    reject(error);
+                });
+
+                // Envoi des données de la requête
+                req.write(postData);
+                req.end();
+            } catch (error) {
+                reject(error);
+            }
         });
+    }
 - lang: python
   label: Python
   source: |-
     # Exemple de code Python pour envoyer la reponse d'une demande de transfert
     
     import requests
+    import ssl
+
+    def execute_https_post_request(url, data, cert_file, cert_password, headers):
+        try:
+            # Chargement du certificat
+            context = ssl.create_default_context(purpose=ssl.Purpose.CLIENT_AUTH)
+            context.load_pkcs12(cert_file, cert_password)
+
+            # Envoi de la requête
+            response = requests.post(url, data=data, cert=context, headers=headers)
+
+            # Vérification de la statut dans la reponse
+            response.raise_for_status()
+
+            return response
+
+    # Appel endpoint SPI
 
     url = 'https://api.test.pi-bceao.com/spi/v1/transferts/rapports'
     request_body = "<RequestPayload xmlns=\"urn:bceao:pi:xsd:payload.1.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd\"> ... </RequestPayload>"
+    cert_file = "/path/to/certificate.pfx"
+    cert_password = "password"
     headers = {'Content-Type': 'application/xml'}
 
-    response = requests.post(url, data=request_body, headers=headers)
+    response = execute_https_post_request(url, request_body, cert_file, cert_password, headers)
+
     print(response.status_code)
     print(response.text)
+    
