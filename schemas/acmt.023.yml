@@ -1,0 +1,98 @@
+components:
+  schemas:
+    # acmt.023
+    MessageAcmt023:
+      type: object
+      required:
+        - RequestPayload
+      properties:
+        RequestPayload:
+          type: object
+          required:
+            - "@xmlns"
+            - AppHdr
+            - Document
+          properties:
+            "@xmlns": # Namespace declaration
+              type: string
+              enum:
+                - urn:bceao:pi:xsd:payload.1.0.0
+            # BAH Header
+            AppHdr:
+              $ref: "./bah.yml#/components/schemas/MessageAppHeader"
+            # Document
+            Document:
+              type: object
+              properties:
+                "@xmlns": # Namespace declaration
+                  type: string
+                  enum:
+                    - urn:iso:std:iso:20022:tech:xsd:acmt.023.001.03
+                IdVrfctnReq:
+                  type: object
+                  properties:
+                    Assgnmt:
+                      type: object
+                      properties:
+                        MsgId:
+                          type: string
+                        CreDtTm:
+                          type: string
+                          format: date-time
+                        # information assigner (payeur)
+                        Assgnr:
+                          type: object
+                          properties:
+                            Agt:
+                              type: object
+                              properties:
+                                FinInstnId:
+                                  $ref: "./common.yml#/components/schemas/FinancialInstitutionIdentification18NmOthr"
+                              required:
+                                - FinInstnId
+                          required:
+                            - Agt
+                        # information assigne (paye)
+                        Assgne:
+                          type: object
+                          properties:
+                            Agt:
+                              type: object
+                              properties:
+                                FinInstnId:
+                                  $ref: "./common.yml#/components/schemas/FinancialInstitutionIdentification18NmOthr"
+                              required:
+                                - FinInstnId
+                          required:
+                            - Agt
+                      required:
+                        - MsgId
+                        - CreDtTm
+                        - Assgnr
+                        - Assgne
+                    Vrfctn:
+                      type: object
+                      properties:
+                        Id:
+                          type: string
+                        PtyAndAcctId:
+                          type: object
+                          properties:
+                            Acct:
+                              type: object
+                              properties:
+                                Id:
+                                  $ref: "./common.yml#/components/schemas/AccountIdentification4Choice"
+                              required:
+                                - Id
+                          required:
+                            - Acct
+                      required:
+                        - Id
+                        - PtyAndAcctId
+                  required:
+                    - Assgnmt
+                    - Vrfctn
+              required:
+                - "@xmlns"
+                - IdVrfctnReq

@@ -1,0 +1,59 @@
+components:
+  schemas:
+    # reda.031
+    MessageReda031:
+      type: object
+      required:
+        - RequestPayload
+      properties:
+        RequestPayload:
+          type: object
+          required:
+            - "@xmlns"
+            - AppHdr
+            - Document
+          properties:
+            "@xmlns": # Namespace declaration
+              type: string
+              enum:
+                - urn:bceao:pi:xsd:payload.1.0.0
+            # BAH Header
+            AppHdr:
+              $ref: "./bah.yml#/components/schemas/MessageAppHeader"
+            # Document
+            Document:
+              type: object
+              properties:
+                "@xmlns": # Namespace declaration
+                  type: string
+                  enum:
+                    - urn:iso:std:iso:20022:tech:xsd:reda.031.001.01
+                PtyDeltnReq:
+                  $ref: "#/components/schemas/PartyDeletionRequestV01"
+              required:
+                - "@xmlns"
+                - PtyDeltnReq
+
+    # Propriétés reda.031
+    PartyDeletionRequestV01:
+      type: object
+      properties:
+        MsgHdr:
+          $ref: "./common.yml#/components/schemas/MessageHeader1"
+        SysPtyId:
+          $ref: "#/components/schemas/SystemPartyIdentification8"
+      required:
+        - MsgHdr
+        - SysPtyId
+
+    SystemPartyIdentification8:
+      type: object
+      properties:
+        Id:
+          $ref: "./common.yml#/components/schemas/PartyIdentification136"
+        RspnsblPtyId:
+          $ref: "./common.yml#/components/schemas/PartyIdentification136"
+      required:
+        - Id
+        - RspnsblPtyId
+

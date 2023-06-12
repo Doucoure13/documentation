@@ -1,0 +1,71 @@
+components:
+  schemas:
+    # reda.014
+    MessageReda014:
+      type: object
+      required:
+        - RequestPayload
+      properties:
+        RequestPayload:
+          type: object
+          required:
+            - "@xmlns"
+            - AppHdr
+            - Document
+          properties:
+            "@xmlns": # Namespace declaration
+              type: string
+              enum:
+                - urn:bceao:pi:xsd:payload.1.0.0
+            # BAH Header
+            AppHdr:
+              $ref: "./bah.yml#/components/schemas/MessageAppHeader"
+            # Document
+            Document:
+              type: object
+              properties:
+                "@xmlns": # Namespace declaration
+                  type: string
+                  enum:
+                    - urn:iso:std:iso:20022:tech:xsd:reda.014.001.01
+                PtyCreReq:
+                  $ref: "#/components/schemas/PartyCreationRequestV01"
+              required:
+                - PtyCreReq
+
+    # Propriétés reda.014
+    PartyCreationRequestV01:
+      type: object
+      properties:
+        MsgHdr:
+          $ref: "./common.yml#/components/schemas/MessageHeader1"
+        Pty:
+          $ref: "#/components/schemas/SystemParty4"
+      required:
+        - MsgHdr
+        - Pty
+
+    SystemParty4:
+      type: object
+      properties:
+        PtyId:
+          $ref: "#/components/schemas/SystemPartyIdentification9"
+        Tp:
+          $ref: "./common.yml#/components/schemas/SystemPartyType1Choice"
+      required:
+        - PtyId
+        - Tp
+
+    SystemPartyIdentification9:
+      type: object
+      properties:
+        Id:
+          $ref: "./common.yml#/components/schemas/PartyIdentification136"
+        RspnsblPtyId:
+          $ref: "./common.yml#/components/schemas/PartyIdentification136"
+      required:
+        - Id
+        - RspnsblPtyId
+
+    
+

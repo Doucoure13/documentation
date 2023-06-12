@@ -1,0 +1,324 @@
+components:
+  schemas:
+    # reda.022
+    MessageReda022:
+      type: object
+      required:
+        - RequestPayload
+      properties:
+        RequestPayload:
+          type: object
+          required:
+            - "@xmlns"
+            - AppHdr
+            - Document
+          properties:
+            "@xmlns": # Namespace declaration
+              type: string
+              enum:
+                - urn:bceao:pi:xsd:payload.1.0.0
+            # BAH Header
+            AppHdr:
+              $ref: "./bah.yml#/components/schemas/MessageAppHeader"
+            # Document
+            Document:
+              type: object
+              properties:
+                "@xmlns": # Namespace declaration
+                  type: string
+                  enum:
+                    - urn:iso:std:iso:20022:tech:xsd:reda.022.001.01
+                PtyModReq:
+                  $ref: "#/components/schemas/PartyModificationRequestV01"
+              required:
+                - "@xmlns"
+                - PtyModReq
+
+    # Propriétés reda.022
+    PartyModificationRequestV01:
+        type: object
+        properties:
+            MsgHdr:
+                $ref: "./common.yml#/components/schemas/GroupHeader47"
+            SysPtyId:
+                $ref: "#/components/schemas/OrganisationIdentification8"
+            Mod:
+                $ref: "#/components/schemas/SystemPartyModification2"
+        required:
+          - MsgHdr
+          - SysPtyId
+          - Mod
+
+    OrganisationIdentification8:
+        type: object
+        properties:
+            Id:
+                $ref: "./common.yml#/components/schemas/PartyIdentification136"
+        required:
+          - Id
+
+    SystemPartyModification2:
+        type: object
+        properties:
+            ScpIndctn:
+                $ref: "#/components/schemas/DataModification1Code"
+            ReqdMod:
+                $ref: "#/components/schemas/SystemPartyModification2Choice"
+
+    DataModification1Code:
+        type: string
+        enum:
+            - INSE
+            - UPDT
+            - DELT
+    
+    SystemPartyModification2Choice:
+        oneOf:
+            - $ref: '#/components/schemas/PartyName3'
+            - $ref: '#/components/schemas/Contact5'
+            - $ref: '#/components/schemas/PostalAddress25'
+
+    PartyName3:
+        type: object
+        properties:
+            Nm:
+                type: string
+                minLength: 1
+                maxLength: 350
+            ShrtNm:
+                type: string
+                minLength: 1
+                maxLength: 35
+        required:
+            - Nm
+
+    Max350Text:
+        type: string
+        minLength: 1
+        maxLength: 350
+
+    Contact5:
+        type: object
+        properties:
+            NmPrfx:
+                type: string
+                enum:
+                    - DOCT
+                    - MADM
+                    - MISS
+                    - MIST
+                    - MIKS
+            Nm:
+                type: string
+                maxLength: 140
+            PhneNb:
+                type: string
+                pattern: '\+[0-9]{1,3}-[0-9()+\-]{1,30}'
+            MobNb:
+                type: string
+                pattern: '\+[0-9]{1,3}-[0-9()+\-]{1,30}'
+            FaxNb:
+                type: string
+                pattern: '\+[0-9]{1,3}-[0-9()+\-]{1,30}'
+            EmailAdr:
+                type: string
+                minLength: 1
+                maxLength: 2048
+            EmailPurp:
+                type: string
+                minLength: 1
+                maxLength: 35
+            JobTitl:
+                type: string
+                minLength: 1
+                maxLength: 35
+            Rspnsblty:
+                $ref: '#/components/schemas/DataModification2Code'
+            Dept:
+                type: string
+                minLength: 1
+                maxLength: 70
+            Othr:
+                type: array
+                items:
+                    $ref: '#/components/schemas/OtherContact1'
+            PrefrdMtd:
+                $ref: '#/components/schemas/PreferredContactMethod1Code'
+            VldFr:
+                type: string
+                format: date
+            VldTo:
+                type: string
+                format: date
+
+    NamePrefix2Code:
+        type: string
+        enum:
+            - DOCT
+            - MADM
+            - MISS
+            - MIST
+            - MIKS
+
+    PhoneNumber:
+        type: string
+        pattern: '\+[0-9]{1,3}-[0-9()+\-]{1,30}'
+
+    DataModification2Code:
+        type: string
+        enum:
+            - FONC
+            - TECH
+            - ADMN
+
+    Max70Text:
+        type: string
+        minLength: 1
+        maxLength: 70
+
+    OtherContact1:
+        type: object
+        properties:
+            ChanlTp:
+                type: string
+                minLength: 1
+                maxLength: 4
+            Id:
+                type: string
+                minLength: 1
+                maxLength: 128
+
+    Max4Text:
+        type: string
+        minLength: 1
+        maxLength: 4
+
+    Max128Text:
+        type: string
+        minLength: 1
+        maxLength: 128
+
+    PreferredContactMethod1Code:
+        type: string
+        enum:
+            - LETT
+            - MAIL
+            - PHON
+            - FAXX
+            - CELL
+
+    ISODate:
+        type: string
+        format: date
+
+    PostalAddress25:
+        type: object
+        properties:
+            AdrTp:
+                $ref: '#/components/schemas/AddressType3Choice'
+            Dept:
+                type: string
+                minLength: 1
+                maxLength: 70
+            SubDept:
+                type: string
+                minLength: 1
+                maxLength: 70
+            StrtNm:
+                type: string
+                minLength: 1
+                maxLength: 70
+            BldgNb:
+                type: string
+                minLength: 1
+                maxLength: 16
+            BldgNm:
+                type: string
+                minLength: 1
+                maxLength: 35
+            Flr:
+                type: string
+                minLength: 1
+                maxLength: 70
+            PstBx:
+                type: string
+                minLength: 1
+                maxLength: 16
+            Room:
+                type: string
+                minLength: 1
+                maxLength: 70
+            PstCd:
+                type: string
+                minLength: 1
+                maxLength: 16
+            TwnNm:
+                type: string
+                minLength: 1
+                maxLength: 35
+            TwnLctnNm:
+                type: string
+                minLength: 1
+                maxLength: 35
+            DstrctNm:
+                type: string
+                minLength: 1
+                maxLength: 35
+            CtrySubDvsn:
+                type: string
+                minLength: 1
+                maxLength: 35
+            Ctry:
+                type: string
+                pattern: '[A-Z]{2,2}'
+            AdrLine:
+                type: array
+                items:
+                    type: string
+                    minLength: 1
+                    maxLength: 70
+            VldFr:
+                type: string
+                format: date
+
+    AddressType3Choice:
+        oneOf:
+            - $ref: '#/components/schemas/AddressType2Code'
+            - $ref: '#/components/schemas/GenericIdentification30'
+
+    AddressType2Code:
+        type: string
+        enum:
+            - ADDR
+            - PBOX
+            - HOME
+            - BIZZ
+            - MLTO
+            - DLVY
+
+    GenericIdentification30:
+        type: object
+        properties:
+            Id:
+                type: string
+                pattern: '[a-zA-Z0-9]{4}'
+            Issr:
+                type: string
+                maxLength: 35
+            SchmeNm:
+                type: string
+                maxLength: 35
+
+    Exact4AlphaNumericText:
+        type: string
+        pattern: '[a-zA-Z0-9]{4}'
+
+    Max16Text:
+        type: string
+        minLength: 1
+        maxLength: 16
+
+    CountryCode:
+        type: string
+        pattern: '[A-Z]{2,2}'
+

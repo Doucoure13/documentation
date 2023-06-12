@@ -23,7 +23,7 @@ value: |
         </FIId>
       </To>
       <BizMsgIdr>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
-      <MsgDefIdr>camt.014.001.05</MsgDefIdr>
+      <MsgDefIdr>pacs.008.001.10/MsgDefIdr>
       <CreDt>2023-02-10T08:30:13.211Z</CreDt>
       <Sgntr></Sgntr>
     </AppHdr>
@@ -101,7 +101,7 @@ value: |
             <FinInstnId>
               <Nm>Participant Paye</Nm>
               <Othr>
-                <Id>SNB234</Id>
+                <Id>TGB005</Id>
               </Othr>
             </FinInstnId>
             <BrnchId>

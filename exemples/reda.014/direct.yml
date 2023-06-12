@@ -23,19 +23,39 @@ value: |
         </FIId>
       </To>
       <BizMsgIdr>MTGB005oUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
-      <MsgDefIdr>pacs.028.001.05</MsgDefIdr>
+      <MsgDefIdr>reda.014.001.01</MsgDefIdr>
       <CreDt>2023-02-10T08:30:13.211Z</CreDt>
       <Sgntr></Sgntr>
     </AppHdr>
-    <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.028.001.05">
-      <FIToFIPmtStsReq>
-        <GrpHdr>
+    <Document xmlns="urn:iso:std:iso:20022:tech:xsd:reda.014.001.01">
+      <PtyCreReq>
+        <MsgHdr>
           <MsgId>MTGB005oUUVMhtGwtcHdmyomo9aHZ1cqk77</MsgId>
-          <CreDtTm>2023-02-21T15:36:00.150Z</CreDtTm>
-        </GrpHdr>
-        <TxInf>
-            <OrgnlEndToEndId>ETGB00520230208153623X7cQSIJnmLCBvm</OrgnlEndToEndId>
-        </TxInf>
-      </FIToFIPmtStsReq>
+          <CreDtTm>2023-02-09T09:28:12.211Z</CreDtTm>
+        </MsgHdr>
+        <Pty>
+          <PtyId>
+            <Id>
+              <Id>
+                <PrtryId>
+                  <Id>BJC003</Id>
+                  <Issr>PI</Issr>
+                </PrtryId>
+              </Id>
+            </Id>
+            <RspnsblPtyId>
+              <Id>
+                <PrtryId>
+                  <Id>TGB005</Id>
+                  <Issr>PI</Issr>
+                </PrtryId>
+              </Id>
+            </RspnsblPtyId>
+          </PtyId>
+          <Tp>
+            <Prtry>IDRT</Prtry>
+          </Tp>
+        </Pty>
+      </PtyCreReq>
     </Document>
   </RequestPayload>

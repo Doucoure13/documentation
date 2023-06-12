@@ -15,15 +15,15 @@ value: |
       <To>
         <FIId>
           <FinInstnId>
-            <Nm>PSP banque TG 005</Nm>
+            <Nm>PSP Banque SN 001</Nm>
             <Othr>
-              <Id>TGB005</Id>
+              <Id>SNB001</Id>
             </Othr>
           </FinInstnId>
         </FIId>
       </To>
-      <BizMsgIdr>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
-      <MsgDefIdr>camt.014.001.05</MsgDefIdr>
+      <BizMsgIdr>MPIUMOAnXydyOl7iIZSKdzEGZfWcWBaB6bY</BizMsgIdr>
+      <MsgDefIdr>pacs.002.001.12</MsgDefIdr>
       <CreDt>2023-02-10T08:30:13.211Z</CreDt>
       <Sgntr></Sgntr>
     </AppHdr>

@@ -1,0 +1,59 @@
+components:
+  schemas:
+    # pacs.028
+    MessagePacs028:
+      type: object
+      required:
+        - RequestPayload
+      properties:
+        RequestPayload:
+          type: object
+          required:
+            - "@xmlns"
+            - AppHdr
+            - Document
+          properties:
+            "@xmlns": # Namespace declaration
+              type: string
+              enum:
+                - urn:bceao:pi:xsd:payload.1.0.0
+            # BAH Header
+            AppHdr:
+              $ref: "./bah.yml#/components/schemas/MessageAppHeader"
+            # Document
+            Document:
+              type: object
+              properties:
+                "@xmlns": # Namespace declaration
+                  type: string
+                  enum:
+                    - urn:iso:std:iso:20022:tech:xsd:pacs.028.001.05
+                FIToFIPmtStsReq:
+                  type: object
+                  properties:
+                    # Group Header
+                    GrpHdr:
+                      type: object
+                      properties:
+                        MsgId:
+                          type: string
+                        CreDtTm:
+                          type: string
+                          format: date-time
+                      required:
+                        - MsgId
+                        - CreDtTm
+                    # CreditTransferTransaction
+                    TxInf:
+                      type: object
+                      properties:
+                        OrgnlEndToEndId:
+                          type: string
+                      required:
+                        - OrgnlEndToEndId
+                  required:
+                    - GrpHdr
+                    - TxInf
+              required:
+                - "@xmlns"
+                - FIToFIPmtStsReq

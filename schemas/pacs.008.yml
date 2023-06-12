@@ -1,0 +1,258 @@
+components:
+  schemas:
+    # pacs.0008
+    MessagePacs008:
+      type: object
+      required:
+        - RequestPayload
+      properties:
+        RequestPayload:
+          type: object
+          required:
+            - "@xmlns"
+            - AppHdr
+            - Document
+          properties:
+            "@xmlns": # Namespace declaration
+              type: string
+              enum:
+                - urn:bceao:pi:xsd:payload.1.0.0
+            # BAH Header
+            AppHdr:
+              $ref: "./bah.yml#/components/schemas/MessageAppHeader"
+            # Document
+            Document:
+              type: object
+              properties:
+                "@xmlns": # Namespace declaration
+                  type: string
+                  enum:
+                    - urn:iso:std:iso:20022:tech:xsd:pacs.008.001.10
+                FIToFICstmrCdtTrf:
+                  type: object
+                  properties:
+                    # Group Header
+                    GrpHdr:
+                      type: object
+                      properties:
+                        MsgId:
+                          type: string
+                        CreDtTm:
+                          type: string
+                          format: date-time
+                        NbOfTxs:
+                          type: integer
+                          minimum: 1
+                          maximum: 1
+                        SttlmInf:
+                          type: object
+                          properties:
+                            SttlmMtd:
+                              $ref: "#/components/schemas/SettlementMethod1CodeCLRG"
+                      required:
+                        - MsgId
+                        - CreDtTm
+                        - NbOfTxs
+                        - SttlmInf
+                    # CreditTransferTransaction
+                    CdtTrfTxInf:
+                      type: object
+                      properties:
+                        PmtId:
+                          type: object
+                          properties:
+                            EndToEndId:
+                              $ref: "./common.yml#/components/schemas/EndToEndId"
+                          required:
+                            - EndToEndId
+                        PmtTpInf:
+                          type: object
+                          properties:
+                            SvcLvl:
+                              type: object
+                              properties:
+                                Prtry:
+                                  type: string
+                              required:
+                                - Prtry
+                            LclInstrm:
+                              type: object
+                              properties:
+                                Prtry:
+                                  type: string
+                              required:
+                                - Prtry
+                            CtgyPurp:
+                              type: object
+                              properties:
+                                Prtry:
+                                  type: string
+                              required:
+                                - Prtry
+                          required:
+                            - LclInstrm
+                            - CtgyPurp
+                        IntrBkSttlmAmt:
+                          $ref: "#/components/schemas/IntrBkSttlmAmt"
+                        AccptncDtTm:
+                          type: string
+                          format: date-time
+                        ChrgBr:
+                          $ref: "#/components/schemas/ChargeBearerType1CodeSLEV"
+                        Dbtr:
+                          $ref: "./common.yml#/components/schemas/PartyIdentification135ClientPayeurOuPaye"
+                        DbtrAcct:
+                          $ref: "#/components/schemas/CashAccount"
+                        DbtrAgt:
+                          $ref: "#/components/schemas/BranchAndFinancialInstitutionIdentification6PSPPayeurOuPaye"
+                        CdtrAgt:
+                          $ref: "#/components/schemas/BranchAndFinancialInstitutionIdentification6PSPPayeurOuPaye"
+                        Cdtr:
+                          $ref: "./common.yml#/components/schemas/PartyIdentification135ClientPayeurOuPaye"
+                        CdtrAcct:
+                          $ref: "#/components/schemas/CashAccountCreditor"
+                      required:
+                        - PmtId
+                        - PmtTpInf
+                        - IntrBkSttlmAmt
+                        - AccptncDtTm
+                        - ChrgBr
+                        - Dbtr
+                        - DbtrAcct
+                        - DbtrAgt
+                        - CdtrAgt
+                        - Cdtr
+                        - CdtrAcct
+                  required:
+                    - GrpHdr
+                    - CdtTrfTxInf
+              required:
+                - "@xmlns"
+                - FIToFICstmrCdtTrf
+    
+    # SettlementMethod1Code:
+    SettlementMethod1CodeCLRG:
+      type: string
+      enum:
+        - CLRG
+    
+    IntrBkSttlmAmt:
+      type: object
+      properties:
+        Ccy:
+          type: string
+          xml:
+            attribute: true
+        value:
+          type: integer
+
+    # Charge Bearer: SLEV
+    ChargeBearerType1CodeSLEV:
+      type: string
+      enum:
+        - SLEV
+
+    # Account General
+    CashAccount:
+      type: object
+      properties:
+        Id:
+          $ref: "./common.yml#/components/schemas/AccountIdentification4Choice"
+        Tp:
+          type: object
+          properties:
+            Cd:
+              $ref: "#/components/schemas/ExternalCashAccountType1Code"
+        Ccy:
+          $ref: "#/components/schemas/CurrencyXOF"
+
+      required:
+        - Id
+        - Tp
+        - Ccy
+
+    # Types de comptes
+    ExternalCashAccountType1Code:
+      type: string
+      enum:
+        - CACC
+        - MCOD
+        - SHID
+      description: |
+        This endpoint returns a list of items.
+
+        | Column 1 | Column 2 |
+        | -------- | -------- |
+        | Row 1, Column 1 | Row 1, Column 2 |
+        | Row 2, Column 1 | Row 2, Column 2 |
+
+        # Devise XOF
+    
+    CurrencyXOF:
+      type: string
+      enum:
+        - XOF
+
+    # Account IBAN
+    IBAN2007Identifier:
+      type: object
+      description: International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer.
+      properties:
+        IBAN:
+          type: string
+
+    # Account Othr
+    GenericAccountIdentification1:
+      type: object
+      description: Unique identification of an account, as assigned by the account servicer, using an identification scheme.
+      properties:
+        Othr:
+          type: object
+          properties:
+            Id:
+              type: string
+
+    # BranchAndFinancialInstitutionIdentification6
+    BranchAndFinancialInstitutionIdentification6PSPPayeurOuPaye:
+      type: object
+      properties:
+        FinInstnId:
+          $ref: "./common.yml#/components/schemas/FinancialInstitutionIdentification18NmOthr"
+        BrnchId:
+          type: object
+          properties:
+            Id:
+              $ref: "./common.yml#/components/schemas/Max35Text"
+      required:
+        - FinInstnId
+        - BrnchId
+
+    # Account Creditor
+    CashAccountCreditor:
+      allOf:
+        - $ref: "#/components/schemas/CashAccount"
+        - type: object
+          properties:
+            Prxy:
+              $ref: "#/components/schemas/ProxyAccountIdentification1"
+
+    # Account > Proxy
+    ProxyAccountIdentification1:
+      type: object
+      description: Information related to a proxy  identification of the account.
+      properties:
+        Id:
+          $ref: "./common.yml#/components/schemas/Max2048Text"
+        Tp:
+          type: object
+          properties:
+            Cd:
+              type: string
+              enum:
+                - SHID
+                - MBNO
+                - MCOD
+
+
+
+

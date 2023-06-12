@@ -1,0 +1,119 @@
+components:
+  schemas:
+    # pacs.002
+    MessagePacs002:
+      type: object
+      required:
+        - RequestPayload
+      properties:
+        RequestPayload:
+          type: object
+          required:
+            - "@xmlns"
+            - AppHdr
+            - Document
+          properties:
+            "@xmlns": # Namespace declaration
+              type: string
+              enum:
+                - urn:bceao:pi:xsd:payload.1.0.0
+            # BAH Header
+            AppHdr:
+              $ref: "./bah.yml#/components/schemas/MessageAppHeader"
+            # Document
+            Document:
+              type: object
+              properties:
+                "@xmlns": # Namespace declaration
+                  type: string
+                  enum:
+                    - urn:iso:std:iso:20022:tech:xsd:pacs.002.001.12
+                FIToFIPmtStsRpt:
+                  type: object
+                  properties:
+                    # Group Header
+                    GrpHdr:
+                      type: object
+                      properties:
+                        MsgId:
+                          type: string
+                        CreDtTm:
+                          type: string
+                          format: date-time
+                      required:
+                        - MsgId
+                        - CreDtTm
+                    # CreditTransferTransaction
+                    TxInfAndSts:
+                      type: object
+                      properties:
+                        OrgnlGrpInf:
+                          type: object
+                          properties:
+                            OrgnlMsgId:
+                              type: string
+                            OrgnlMsgNmId:
+                              type: string
+                            OrgnlCreDtTm:
+                              type: string
+                          required:
+                            - EndToEndId
+                        OrgnlEndToEndId:
+                          type: string
+                        TxSts:
+                          type: string
+                          enum:
+                            - ACSP
+                            - RJCT
+                        Rsn:
+                          type: object
+                          properties:
+                            Cd:
+                              $ref: "#/components/schemas/Pacs002RejectRsnCd"
+                          required:
+                            - Cd
+                        AddtlInf:
+                          $ref: "./common.yml#/components/schemas/Max105Text"
+                      anyOf:
+                        - required:
+                            - OrgnlGrpInf
+                            - OrgnlEndToEndId
+                            - TxSts
+                        - required:
+                            - OrgnlGrpInf
+                            - OrgnlEndToEndId
+                            - TxSts
+                            - Rsn
+                            - AddtlInf
+
+                  required:
+                    - GrpHdr
+                    - TxInfAndSts
+              required:
+                - "@xmlns"
+                - FIToFIPmtStsRpt
+
+    # Country code
+    Pacs002RejectRsnCd:
+      type: string
+      enum:
+        - AC03
+        - AC06
+        - AC07
+        - AC14
+        - AG01
+        - AM21
+        - BE01
+        - BE17
+        - FR01
+      description: |
+        - AC03: Le numéro de compte du payé est invalide
+        - AC06: Le compte spécifié est bloqué.
+        - AC07: Compte du payé clôturé
+        - AC14: Type de compte du payé invalide
+        - AG01: Transaction interdite sur ce type de compte.
+        - AM21: Le montant de la transaction dépasse les limites convenues entre la banque et le client.
+        - BE01: Le nom du client final n'est pas lié au numéro de compte associé.
+        - BE17: Code d'identification du payé ou du créditeur final manquant ou invalide
+        - FR01: Retourné à la suite d'une fraude.
+        - UPAY: Le paiement n'est pas justifié.

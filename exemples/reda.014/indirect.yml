@@ -1,0 +1,61 @@
+value: |
+  <RequestPayload xmlns="urn:bceao:pi:xsd:payload.1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:bceao:pi:xsd:payload.1.0.0 ../xsd/pi.payload.1.0.0.xsd">
+    <AppHdr xmlns="urn:iso:std:iso:20022:tech:xsd:head.001.001.03">
+      <Fr>
+        <FIId>
+          <FinInstnId>
+            <Nm>PSP banque BJ 003</Nm>
+            <Othr>
+              <Id>BJC003</Id>
+            </Othr>
+          </FinInstnId>
+        </FIId>
+      </Fr>
+      <To>
+        <FIId>
+          <FinInstnId>
+            <Nm>PI</Nm>
+            <Othr>
+              <Id>PIUMOA</Id>
+            </Othr>
+          </FinInstnId>
+        </FIId>
+      </To>
+      <BizMsgIdr>MBJC003A2KEds9vNtWHD7B7wwq4UXNILYNo</BizMsgIdr>
+      <MsgDefIdr>reda.014.001.01</MsgDefIdr>
+      <CreDt>2023-02-10T08:30:13.211Z</CreDt>
+      <Sgntr></Sgntr>
+    </AppHdr>
+    <Document xmlns="urn:iso:std:iso:20022:tech:xsd:reda.014.001.01">
+      <PtyCreReq>
+        <MsgHdr>
+          <MsgId>MBJC003A2KEds9vNtWHD7B7wwq4UXNILYNo</MsgId>
+          <CreDtTm>2023-02-09T08:28:12.211Z</CreDtTm>
+        </MsgHdr>
+        <Pty>
+          <PtyId>
+            <Id>
+              <Id>
+                <PrtryId>
+                  <Id>BJC003</Id>
+                  <Issr>PI</Issr>
+                </PrtryId>
+              </Id>
+            </Id>
+            <RspnsblPtyId>
+              <Id>
+                <PrtryId>
+                  <Id>TGB005</Id>
+                  <Issr>PI</Issr>
+                </PrtryId>
+              </Id>
+            </RspnsblPtyId>
+          </PtyId>
+          <Tp>
+            <Prtry>IDRT</Prtry>
+          </Tp>
+        </Pty>
+      </PtyCreReq>
+    </Document>
+  </RequestPayload>

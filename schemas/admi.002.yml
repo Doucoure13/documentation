@@ -1,0 +1,74 @@
+components:
+  schemas:
+    # admi.002
+    MessageAdmi002:
+      type: object
+      required:
+        - RequestPayload
+      properties:
+        RequestPayload:
+          type: object
+          required:
+            - "@xmlns"
+            - AppHdr
+            - Document
+          properties:
+            "@xmlns": # Namespace declaration
+              type: string
+              enum:
+                - urn:bceao:pi:xsd:payload.1.0.0
+            # BAH Header
+            AppHdr:
+              $ref: "./bah.yml#/components/schemas/MessageAppHeader"
+            # Document
+            Document:
+              type: object
+              properties:
+                "@xmlns": # Namespace declaration
+                  type: string
+                  enum:
+                    - urn:iso:std:iso:20022:tech:xsd:admi.002.001.01
+                admi.002.001.01:
+                  $ref: "#/components/schemas/admi.002.001.01"
+              required:
+                - "@xmlns"
+                - admi.002.001.01
+
+    # Propriétés admi.002
+    admi.002.001.01:
+      type: object
+      properties:
+        RltdRef:
+          $ref: "#/components/schemas/MessageReference"
+        Rsn:
+          $ref: "#/components/schemas/RejectionReason2"
+      required:
+        - RltdRef
+        - Rsn
+
+    MessageReference:
+      type: object
+      properties:
+        Ref:
+          type: string
+      required:
+        - Ref
+
+    RejectionReason2:
+      type: object
+      properties:
+        RjctgPtyRsn:
+          type: string
+        RjctnDtTm:
+          type: string
+          format: date-time
+        ErrLctn:
+          type: string
+        RsnDesc:
+          type: string
+        AddtlData:
+          type: string
+      required:
+        - RjctgPtyRsn
+        - RjctnDtTm
+

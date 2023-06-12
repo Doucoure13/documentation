@@ -1,0 +1,195 @@
+components:
+  schemas:
+    # FinInstnId
+    FinancialInstitutionIdentification18NmOthr:
+      type: object
+      properties:
+        Nm:
+          $ref: "#/components/schemas/Max140Text"
+        Othr:
+          $ref: "#/components/schemas/GenericFinancialIdentification1"
+      required:
+        - Nm
+        - Othr
+
+    # FinInstnId > Othr
+    GenericFinancialIdentification1:
+      type: object
+      properties:
+        Id:
+          $ref: "#/components/schemas/CodeMembre"
+      required:
+        - Id
+
+    # Code Membre: Code Pays (2 positions) + Code type de participant (1 position) + Numéro ( 3 positions).
+    CodeMembre:
+      type: string
+      pattern: '^(CI|SN|ML|BF|BJ|TG|NE|GW)[BCDF]\d{3}$'
+      example: "SNB001"
+
+        # EndToEndId: E (1) + CodeMembre (6) + Date (20221121161834) (14) + UNIQUEID (14)
+    EndToEndId:
+      type: string
+      pattern: '^E(CI|SN|ML|BF|BJ|TG|NE|GW)[BCDF]\d{3}\d{14}[a-zA-Z0-9]{14}$'
+      example: "ESNB00120221121161834ABCDFG78965412"
+
+    # Creditor or debtor client
+    PartyIdentification135ClientPayeurOuPaye:
+      type: object
+      properties:
+        Nm:
+          $ref: "#/components/schemas/Max140Text"
+        PstlAdr:
+          $ref: "#/components/schemas/PostalAddress24Client"
+        CtryOfRes:
+          $ref: "#/components/schemas/CountryCodeUEMOA"
+      required:
+        - Nm
+        - CtryOfRes
+
+        # Postal address only "TownName" and "AddressLine"
+    PostalAddress24Client:
+      type: object
+      properties:
+        TownName:
+          $ref: "#/components/schemas/Max35Text"
+        AddressLine:
+          type: array
+          maxItems: 7
+          description: Information that locates and identifies a specific address, as defined by postal services, presented in free format text.
+          items:
+            type: string
+            maxLength: 70
+
+        # Country code
+    CountryCodeUEMOA:
+      type: string
+      enum:
+        - CI
+        - SN
+        - ML
+        - GW
+        - BF
+        - NE
+        - BJ
+        - TG
+  
+        # Max 35 Text: used by Id (Code Membre)
+    Max35Text:
+      type: string
+      minLength: 1
+      maxLength: 35
+      description: Specifies a character string with a maximum length of 35 characters.
+
+    # Max 140 text: Nm in PSP Name
+    Max140Text:
+      type: string
+      minLength: 1
+      maxLength: 140
+      description: Specifies a character string with a maximum length of 140 characters.
+
+    # Max 2048 text: Used By Proxy
+    Max2048Text:
+      type: string
+      minLength: 1
+      maxLength: 2048
+      description: Specifies a character string with a maximum length of 2048 characters.
+
+    Max105Text:
+      type: string
+      minLength: 1
+      maxLength: 105
+      description: Specifies a character string with a maximum length of 105 characters.
+
+    # Account > Id
+    AccountIdentification4Choice:
+      type: object
+      description: Specifies the unique identification of an account as assigned by the account servicer.
+      oneOf:
+        - $ref: "#/components/schemas/IBAN2007Identifier"
+        - $ref: "#/components/schemas/GenericAccountIdentification1"
+
+    SystemPartyType1Choice:
+      type: object
+      properties:
+        Prtry:
+          type: string
+          maxLength: 35
+          enum:
+            - IDRT
+      required:
+        - Prtry
+
+    MessageHeader1:
+      type: object
+      properties:
+        MsgId:
+          type: string
+          maxLength: 35
+        CreDtTm:
+          type: string
+          format: date-time
+      required:
+        - MsgId
+        - CreDtTm
+
+    PartyIdentification136:
+      type: object
+      properties:
+        Id:
+          $ref: "#/components/schemas/PartyIdentification120Choice"
+      required:
+        - Id
+
+    PartyIdentification120Choice:
+      type: object
+      properties:
+        PrtryId:
+          $ref: "#/components/schemas/GenericIdentification36"
+      required:
+        - PrtryId
+
+    GenericIdentification36:
+      type: object
+      properties:
+        Id:
+          type: string
+          maxLength: 35
+        Issr:
+          type: string
+          maxLength: 35
+      required:
+        - Id
+        - Issr
+
+    GroupHeader47:
+        type: object
+        properties:
+            MsgId:
+                type: string
+                maxLength: 35
+            CreDtTm:
+                type: string
+                format: date-time
+        required:
+          - MsgId
+          - CreDtTm
+
+    # Account IBAN
+    IBAN2007Identifier:
+      type: object
+      description: International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer.
+      properties:
+        IBAN:
+          type: string
+
+    # Account Othr
+    GenericAccountIdentification1:
+      type: object
+      description: Unique identification of an account, as assigned by the account servicer, using an identification scheme.
+      properties:
+        Othr:
+          type: object
+          properties:
+            Id:
+              type: string

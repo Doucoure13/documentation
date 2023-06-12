@@ -15,22 +15,22 @@ value: |
       <To>
         <FIId>
           <FinInstnId>
-            <Nm>PSP banque TG 005</Nm>
+            <Nm>PSP Banque SN 001</Nm>
             <Othr>
-              <Id>TGB005</Id>
+              <Id>SNB001</Id>
             </Othr>
           </FinInstnId>
         </FIId>
       </To>
       <BizMsgIdr>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
-      <MsgDefIdr>camt.014.001.05</MsgDefIdr>
+      <MsgDefIdr>pacs.002.001.12</MsgDefIdr>
       <CreDt>2023-02-10T08:30:13.211Z</CreDt>
       <Sgntr></Sgntr>
     </AppHdr>
     <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.002.001.12">
       <FIToFIPmtStsRpt>
         <GrpHdr>
-          <MsgId>MPIUMOAnXydyOl7iIZSKdzEGZfWcWBaB6bY</MsgId>
+          <MsgId>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</MsgId>
           <CreDtTm>2023-02-21T15:36:00.150Z</CreDtTm>
         </GrpHdr>
         <TxInfAndSts>

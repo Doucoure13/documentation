@@ -1,0 +1,84 @@
+components:
+  schemas:
+    MessageAppHeader:
+      type: object
+      properties:
+        "@xmlns": # Namespace declaration
+          type: string
+          enum:
+            - urn:iso:std:iso:20022:tech:xsd:head.001.001.03
+        Fr:
+          $ref: "#/components/schemas/Party44ChoiceFr"
+        To:
+          $ref: "#/components/schemas/Party44ChoiceToPI"
+        BizMsgIdr:
+          $ref: "#/components/schemas/MessageId"
+        MsgDefIdr:
+          type: string
+          enum:
+            - pacs.008.001.10
+        CreDt:
+          type: string
+          format: date-time
+      required:
+        - "@xmlns"
+        - Fr
+        - To
+        - BizMsgIdr
+        - MsgDefIdr
+        - CreDt
+
+    # Party44Choice From or To in BAH headear
+    Party44ChoiceFr:
+      type: object
+      properties:
+        FIId:
+          $ref: "#/components/schemas/MessageAppHeaderFr"
+      required:
+        - FIId
+
+    # To PI
+    Party44ChoiceToPI:
+      type: object
+      properties:
+        FIId:
+          type: object
+          properties:
+            FinInstnId:
+              type: object
+              properties:
+                Nm:
+                  type: string
+                  enum:
+                    - PI
+                Othr:
+                  type: object
+                  properties:
+                    Id:
+                      type: string
+                      enum:
+                        - PIUMOA
+                  required:
+                    - Id
+              required:
+                - Nm
+                - Othr
+          required:
+            - FinInstnId
+      required:
+        - FIId
+
+    # Message Identification: M (1) + CodeMembre (6) + UNIQUEID (28)
+    MessageId:
+      type: string
+      pattern: '^M(CI|SN|ML|BF|BJ|TG|NE|GW)[BCDF]\d{3}[a-zA-Z0-9]{28}$'
+      example: "MSNB0011234567890POIUYTREZAQSDFGHJK"
+
+    # BranchAndFinancialInstitutionIdentification6
+    MessageAppHeaderFr:
+      type: object
+      properties:
+        FinInstnId:
+          $ref: "./common.yml#/components/schemas/FinancialInstitutionIdentification18NmOthr"
+      required:
+        - FinInstnId

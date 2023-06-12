@@ -5,9 +5,9 @@ value: |
       <Fr>
         <FIId>
           <FinInstnId>
-            <Nm>PI</Nm>
+            <Nm>PSP banque TG 005</Nm>
             <Othr>
-              <Id>PIUMOA</Id>
+              <Id>TGB005</Id>
             </Othr>
           </FinInstnId>
         </FIId>
@@ -15,29 +15,29 @@ value: |
       <To>
         <FIId>
           <FinInstnId>
-            <Nm>PSP banque TG 005</Nm>
+            <Nm>PI</Nm>
             <Othr>
-              <Id>TGB005</Id>
+              <Id>PIUMOA</Id>
             </Othr>
           </FinInstnId>
         </FIId>
       </To>
-      <BizMsgIdr>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
-      <MsgDefIdr>camt.014.001.05</MsgDefIdr>
+      <BizMsgIdr>MTGB005oUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
+      <MsgDefIdr>acmt.024.001.03</MsgDefIdr>
       <CreDt>2023-02-10T08:30:13.211Z</CreDt>
       <Sgntr></Sgntr>
     </AppHdr>
     <Document xmlns="urn:iso:std:iso:20022:tech:xsd:acmt.023.001.03">
       <IdVrfctnReq>
         <Assgnmt>
-          <MsgId>MSNB001nXydyOl7iIZSKdzEGZfWcWBaB6bY</MsgId>
+          <MsgId>MTGB005oUUVMhtGwtcHdmyomo9aHZ1cqk77</MsgId>
           <CreDtTm>2023-02-21T15:30:00.250Z</CreDtTm>
           <Assgnr>
             <Agt>
               <FinInstnId>
-                <Nm>PSP Banque SN 001</Nm>
+                <Nm>PSP banque TG 005</Nm>
                 <Othr>
-                    <Id>SNB001</Id>
+                    <Id>TGB005</Id>
                 </Othr>
               </FinInstnId>
             </Agt>
@@ -54,7 +54,7 @@ value: |
           </Assgne>
         </Assgnmt>
         <Vrfctn>
-          <Id>ESNB00120230221153554KXvozkpNvhUk9e</Id>
+          <Id>ETGB00520230221153554KXvozkpNvhUk9e</Id>
           <PtyAndAcctId>
             <Acct>
               <Id>

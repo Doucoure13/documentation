@@ -5,7 +5,7 @@ value: |
       <Fr>
         <FIId>
           <FinInstnId>
-            <Nm>PSP banque TG 005</Nm>
+            <Nm>PSP Togo 005</Nm>
             <Othr>
               <Id>TGB005</Id>
             </Othr>
@@ -22,20 +22,19 @@ value: |
           </FinInstnId>
         </FIId>
       </To>
-      <BizMsgIdr>MTGB005oUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
-      <MsgDefIdr>pacs.028.001.05</MsgDefIdr>
-      <CreDt>2023-02-10T08:30:13.211Z</CreDt>
-      <Sgntr></Sgntr>
+      <BizMsgIdr>MTGB005A2KEds9vNtWHD7B7vvq4UXNILYre</BizMsgIdr>
+      <MsgDefIdr>camt.013.001.04</MsgDefIdr>
+      <CreDt>2023-02-09T09:28:12.211Z</CreDt>
     </AppHdr>
-    <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.028.001.05">
-      <FIToFIPmtStsReq>
-        <GrpHdr>
-          <MsgId>MTGB005oUUVMhtGwtcHdmyomo9aHZ1cqk77</MsgId>
-          <CreDtTm>2023-02-21T15:36:00.150Z</CreDtTm>
-        </GrpHdr>
-        <TxInf>
-            <OrgnlEndToEndId>ETGB00520230208153623X7cQSIJnmLCBvm</OrgnlEndToEndId>
-        </TxInf>
-      </FIToFIPmtStsReq>
+    <Document  xmlns="urn:iso:std:iso:20022:tech:xsd:camt.013.001.04">
+      <GetMmb>
+        <MsgHdr>
+          <MsgId>MTGB005A2KEds9vNtWHD7B7vvq4UXNILYre</MsgId>
+          <CreDtTm>2023-02-09T09:28:12.211Z</CreDtTm>
+        </MsgHdr>
+        <MmbQryDef>
+          <QryTp>ALLL</QryTp>
+        </MmbQryDef>
+      </GetMmb>
     </Document>
   </RequestPayload>

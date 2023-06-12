@@ -23,28 +23,17 @@ value: |
         </FIId>
       </To>
       <BizMsgIdr>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
-      <MsgDefIdr>pacs.002.001.12</MsgDefIdr>
+      <MsgDefIdr>admi.004.001.02</MsgDefIdr>
       <CreDt>2023-02-10T08:30:13.211Z</CreDt>
       <Sgntr></Sgntr>
     </AppHdr>
-    <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.002.001.12">
-      <FIToFIPmtStsRpt>
-        <GrpHdr>
-          <MsgId>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</MsgId>
-          <CreDtTm>2023-02-21T15:36:00.150Z</CreDtTm>
-        </GrpHdr>
-        <TxInfAndSts>
-          <OrgnlGrpInf>
-            <OrgnlMsgId>MPIUMOAnXydyOl7iIZSKdzEGZfWcWBaB6bY</OrgnlMsgId>
-            <OrgnlMsgNmId>pacs.008.001.10</OrgnlMsgNmId>
-            <OrgnlCreDtTm>2023-02-21T15:35:58.205Z</OrgnlCreDtTm>
-          </OrgnlGrpInf>
-          <OrgnlEndToEndId>ESNB00120230208153623X7cQSIJnmLCBvm</OrgnlEndToEndId>
-          <TxSts>ACCC</TxSts>
-          <FctvIntrBkSttlmDt>
-            <DtTm>2023-02-21T15:35:59.362Z</DtTm>
-          </FctvIntrBkSttlmDt>
-        </TxInfAndSts>
-      </FIToFIPmtStsRpt>
+    <Document xmlns="urn:iso:std:iso:20022:tech:xsd:admi.004.001.02">
+      <SysEvtNtfctn>
+        <EvtInf>
+          <EvtCd>PING</EvtCd>
+          <EvtDesc>Test de connectivite</EvtDesc>
+          <EvtTm>2023-02-10T08:30:13.211Z</EvtTm>
+        </EvtInf>
+      </SysEvtNtfctn>
     </Document>
   </RequestPayload>

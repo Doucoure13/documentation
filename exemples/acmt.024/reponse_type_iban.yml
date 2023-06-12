@@ -23,21 +23,21 @@ value: |
         </FIId>
       </To>
       <BizMsgIdr>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
-      <MsgDefIdr>camt.014.001.05</MsgDefIdr>
+      <MsgDefIdr>acmt.024.001.03</MsgDefIdr>
       <CreDt>2023-02-10T08:30:13.211Z</CreDt>
       <Sgntr></Sgntr>
     </AppHdr>
     <Document xmlns="urn:iso:std:iso:20022:tech:xsd:acmt.024.001.03">
       <IdVrfctnRpt>
           <Assgnmt>
-            <MsgId>MCIB030KIjhjghgtuuiyiyLKIRhpihMkeuh</MsgId>
+            <MsgId>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</MsgId>
             <CreDtTm>2023-02-21T15:30:00.850Z</CreDtTm>
             <Assgnr>
               <Agt>
                 <FinInstnId>
-                  <Nm>PSP Banque SN 001</Nm>
+                  <Nm>PSP banque TG 005</Nm>
                   <Othr>
-                    <Id>SNB001</Id>
+                    <Id>TGB005</Id>
                   </Othr>
                 </FinInstnId>
               </Agt>
@@ -54,10 +54,10 @@ value: |
             </Assgne>
           </Assgnmt>
           <OrgnlAssgnmt>
-            <MsgId>MPIUMOAnXydyOl7iIZSKdzEGZfWcWBa9999</MsgId>
+            <MsgId>MTGB005nXydyOl7iIZSKdzEGZfWcWBa9999</MsgId>
           </OrgnlAssgnmt>
           <Rpt>
-            <OrgnlId>ESNB00120230221153554KXvozkpNvhUk9e</OrgnlId>
+            <OrgnlId>ETGB00520230221153554KXvozkpNvhUk9e</OrgnlId>
             <Vrfctn>true</Vrfctn>
             <UpdtdPtyAndAcctId>
               <Pty>

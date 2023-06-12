@@ -1,0 +1,23 @@
+organization: SPI_DOCS
+
+extends:
+  - recommended
+
+apis:
+  main@v1:
+    root: ./openapi.yaml
+
+theme:
+  openapi:
+    # disableSearch: true
+    pagination: section
+    showConsole: true
+    # theme: 
+    #   colors: 
+    #     primary: 
+    #       main: '#ff0000'   # Couleur principale
+    #     text:
+    #       primary: '#333333'     # Couleur du texte
+    #   typography:
+    #     fontSize: 14px      # Taille de police
+    #     fontFamily: Arial   

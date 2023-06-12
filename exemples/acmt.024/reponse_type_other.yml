@@ -23,7 +23,7 @@ value: |
         </FIId>
       </To>
       <BizMsgIdr>MPIUMOAoUUVMhtGwtcHdmyomo9aHZ1cqk77</BizMsgIdr>
-      <MsgDefIdr>camt.014.001.05</MsgDefIdr>
+      <MsgDefIdr>acmt.024.001.03</MsgDefIdr>
       <CreDt>2023-02-10T08:30:13.211Z</CreDt>
       <Sgntr></Sgntr>
     </AppHdr>
@@ -35,9 +35,9 @@ value: |
           <Assgnr>
             <Agt>
               <FinInstnId>
-                <Nm>PSP Banque SN 001</Nm>
+                <Nm>PSP banque TG 005</Nm>
                 <Othr>
-                  <Id>SNB001</Id>
+                  <Id>TGB005</Id>
                 </Othr>
               </FinInstnId>
             </Agt>
@@ -54,10 +54,10 @@ value: |
           </Assgne>
         </Assgnmt>
         <OrgnlAssgnmt>
-          <MsgId>MPIUMOAnXydyOl7iIZSKdzEGZfWcWBa9999</MsgId>
+          <MsgId>MTGB005nXydyOl7iIZSKdzEGZfWcWBa9999</MsgId>
         </OrgnlAssgnmt>
         <Rpt>
-          <OrgnlId>ESNB00120230221153554KXvozkpNvhUk9e</OrgnlId>
+          <OrgnlId>ETGB00520230221153554KXvozkpNvhUk9e</OrgnlId>
           <Vrfctn>true</Vrfctn>
           <UpdtdPtyAndAcctId>
             <Pty>

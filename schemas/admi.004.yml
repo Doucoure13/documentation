@@ -1,0 +1,65 @@
+components:
+  schemas:
+    # admi.004
+    MessageAdmi004:
+      type: object
+      required:
+        - RequestPayload
+      properties:
+        RequestPayload:
+          type: object
+          required:
+            - "@xmlns"
+            - AppHdr
+            - Document
+          properties:
+            "@xmlns": # Namespace declaration
+              type: string
+              enum:
+                - urn:bceao:pi:xsd:payload.1.0.0
+            # BAH Header
+            AppHdr:
+              $ref: "./bah.yml#/components/schemas/MessageAppHeader"
+            # Document
+            Document:
+              type: object
+              properties:
+                "@xmlns": # Namespace declaration
+                  type: string
+                  enum:
+                    - urn:iso:std:iso:20022:tech:xsd:admi.004.001.02
+                SysEvtNtfctn:
+                  $ref: "#/components/schemas/SystemEventNotificationV02"
+              required:
+                - "@xmlns"
+                - SysEvtNtfctn
+
+    # Propriétés admi.004
+    SystemEventNotificationV02:
+      type: object
+      properties:
+        EvtInf:
+          $ref: "#/components/schemas/Event2"
+      required:
+        - EvtInf
+
+    Event2:
+      type: object
+      properties:
+        EvtCd:
+          type: string
+          maxLength: 4
+        EvtParam:
+          type: array
+          items:
+            type: string
+          maxItems: 35
+        EvtDesc:
+          type: string
+          maxLength: 1000
+        EvtTm:
+          type: string
+          format: date-time
+      required:
+        - EvtCd
+
